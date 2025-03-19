@@ -6,7 +6,7 @@
             "Jane Smith",
             "Carlos Mendoza"
         ],
-        "place": "Residential Home",
+        "operational area": "Residential Home",
         "address": "456 Oak Ave",
         "equipments": [
             "Drill",
@@ -21,7 +21,7 @@
             "Emily Johnson",
             "Robert Brown"
         ],
-        "place": "Factory",
+       "operational area": "Factory",
         "address": "789 Pine Rd",
         "equipments": [
             "Toolbox",

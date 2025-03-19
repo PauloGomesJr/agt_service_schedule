@@ -1,0 +1,1463 @@
+[
+    {
+        "service_register": "SR-1001",
+        "assignments": "Plumbing",
+        "workers": [
+            "Fabrício",
+            "Lira",
+            "Fernandes"
+        ],
+        "operational area": "Residential Home",
+        "address": "123 Main St",
+        "equipments": [
+            "Paintbrush",
+            "Saw",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1002",
+        "assignments": "Cleaning",
+        "workers": [
+            "Gonçalves",
+            "Clodoaldo"
+        ],
+        "operational area": "Residential Home",
+        "address": "789 Pine St",
+        "equipments": [
+            "Wrench",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1003",
+        "assignments": "Landscaping",
+        "workers": [
+            "Silvino",
+            "Santos",
+            "Almeida"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Drill",
+            "Pliers",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1004",
+        "assignments": "Painting",
+        "workers": [
+            "Carlos",
+            "Bispo"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Ladder",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1005",
+        "assignments": "Landscaping",
+        "workers": [
+            "Jilmar",
+            "Wandeclayson",
+            "Claudenice"
+        ],
+        "operational area": "Public Space",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1006",
+        "assignments": "Carpentry",
+        "workers": [
+            "Manasses",
+            "Edilson",
+            "Ricardo"
+        ],
+        "operational area": "Residential Home",
+        "address": "123 Main St",
+        "equipments": [
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1007",
+        "assignments": "Plumbing",
+        "workers": [
+            "Ricardo",
+            "Celdo"
+        ],
+        "operational area": "Residential Home",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Ladder",
+            "Drill",
+            "Wrench",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1008",
+        "assignments": "Maintenance",
+        "workers": [
+            "Wandeclayson",
+            "Sandro",
+            "Manasses"
+        ],
+        "operational area": "Public Space",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Pliers",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1009",
+        "assignments": "Cleaning",
+        "workers": [
+            "Wellington",
+            "Simone"
+        ],
+        "operational area": "Commercial Building",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1010",
+        "assignments": "Painting",
+        "workers": [
+            "Oliveira",
+            "Ailton"
+        ],
+        "operational area": "Public Space",
+        "address": "789 Pine St",
+        "equipments": [
+            "Toolbox",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1011",
+        "assignments": "Plumbing",
+        "workers": [
+            "Carlos",
+            "Medrado",
+            "Marinangelo"
+        ],
+        "operational area": "Commercial Building",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1012",
+        "assignments": "Cleaning",
+        "workers": [
+            "Afonso",
+            "Ricardo"
+        ],
+        "operational area": "Residential Home",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Toolbox",
+            "Paintbrush",
+            "Wrench",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1013",
+        "assignments": "Maintenance",
+        "workers": [
+            "Apolo",
+            "Cesar",
+            "Jilmar"
+        ],
+        "operational area": "Residential Home",
+        "address": "202 Elm St",
+        "equipments": [
+            "Saw",
+            "Toolbox",
+            "Wrench",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1014",
+        "assignments": "Carpentry",
+        "workers": [
+            "Cesar"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1015",
+        "assignments": "Carpentry",
+        "workers": [
+            "Torres",
+            "Lira"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1016",
+        "assignments": "Cleaning",
+        "workers": [
+            "Edilson",
+            "Silvino"
+        ],
+        "operational area": "Residential Home",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Pliers",
+            "Toolbox",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1017",
+        "assignments": "Painting",
+        "workers": [
+            "Amâncio",
+            "Medrado",
+            "Jilmar"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Saw",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1018",
+        "assignments": "Cleaning",
+        "workers": [
+            "Bispo"
+        ],
+        "operational area": "Residential Home",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Wrench",
+            "Hammer",
+            "Paintbrush",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1019",
+        "assignments": "Electrical",
+        "workers": [
+            "Brito"
+        ],
+        "operational area": "Public Space",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Toolbox",
+            "Wrench",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1020",
+        "assignments": "Landscaping",
+        "workers": [
+            "Cesar",
+            "Francimar",
+            "Sandro"
+        ],
+        "operational area": "Residential Home",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Wrench",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1021",
+        "assignments": "Painting",
+        "workers": [
+            "Perez",
+            "Santos"
+        ],
+        "operational area": "Public Space",
+        "address": "123 Main St",
+        "equipments": [
+            "Hammer",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1022",
+        "assignments": "Painting",
+        "workers": [
+            "Apolo",
+            "Edvan"
+        ],
+        "operational area": "Public Space",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1023",
+        "assignments": "Plumbing",
+        "workers": [
+            "Celdo",
+            "Jilmar"
+        ],
+        "operational area": "Residential Home",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Ladder",
+            "Wrench",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1024",
+        "assignments": "Plumbing",
+        "workers": [
+            "Lima"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Wrench",
+            "Pliers",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1025",
+        "assignments": "Maintenance",
+        "workers": [
+            "Perez"
+        ],
+        "operational area": "Residential Home",
+        "address": "789 Pine St",
+        "equipments": [
+            "Hammer",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1026",
+        "assignments": "Maintenance",
+        "workers": [
+            "Julianny"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Ladder",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1027",
+        "assignments": "Painting",
+        "workers": [
+            "Torres",
+            "Carlos"
+        ],
+        "operational area": "Residential Home",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Pliers",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1028",
+        "assignments": "Painting",
+        "workers": [
+            "Edvan",
+            "Fabrício"
+        ],
+        "operational area": "Residential Home",
+        "address": "202 Elm St",
+        "equipments": [
+            "Saw",
+            "Drill",
+            "Ladder",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1029",
+        "assignments": "Plumbing",
+        "workers": [
+            "Costa"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Toolbox",
+            "Hammer",
+            "Ladder",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1030",
+        "assignments": "Cleaning",
+        "workers": [
+            "Edvan",
+            "José Roberto"
+        ],
+        "operational area": "Residential Home",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Saw",
+            "Pliers",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1031",
+        "assignments": "Maintenance",
+        "workers": [
+            "Perez",
+            "Amorim"
+        ],
+        "operational area": "Public Space",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Wrench",
+            "Ladder",
+            "Hammer",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1032",
+        "assignments": "Carpentry",
+        "workers": [
+            "Wandeclayson",
+            "Viana",
+            "Apolo"
+        ],
+        "operational area": "Commercial Building",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Toolbox",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1033",
+        "assignments": "Carpentry",
+        "workers": [
+            "Edvan",
+            "Oliveira"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Drill",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1034",
+        "assignments": "Electrical",
+        "workers": [
+            "Valdemir",
+            "Ryan",
+            "Paulo"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Hammer",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1035",
+        "assignments": "Maintenance",
+        "workers": [
+            "Claudenice"
+        ],
+        "operational area": "Commercial Building",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Ladder",
+            "Hammer",
+            "Pliers",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1036",
+        "assignments": "Landscaping",
+        "workers": [
+            "Tiago",
+            "Petrônio",
+            "Costa"
+        ],
+        "operational area": "Residential Home",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Paintbrush",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1037",
+        "assignments": "Plumbing",
+        "workers": [
+            "Carlos",
+            "Tiago"
+        ],
+        "operational area": "Residential Home",
+        "address": "202 Elm St",
+        "equipments": [
+            "Drill",
+            "Wrench",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1038",
+        "assignments": "Landscaping",
+        "workers": [
+            "Gonçalves"
+        ],
+        "operational area": "Commercial Building",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Wrench",
+            "Toolbox",
+            "Paintbrush",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1039",
+        "assignments": "Painting",
+        "workers": [
+            "Sandro",
+            "Luiz Carlos",
+            "Claudenice"
+        ],
+        "operational area": "Residential Home",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Wrench",
+            "Hammer",
+            "Ladder",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1040",
+        "assignments": "Landscaping",
+        "workers": [
+            "Lindinalva"
+        ],
+        "operational area": "Commercial Building",
+        "address": "123 Main St",
+        "equipments": [
+            "Saw",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1041",
+        "assignments": "Painting",
+        "workers": [
+            "Simone",
+            "Gilvane"
+        ],
+        "operational area": "Residential Home",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Ladder",
+            "Drill",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1042",
+        "assignments": "Plumbing",
+        "workers": [
+            "Manasses"
+        ],
+        "operational area": "Commercial Building",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1043",
+        "assignments": "Carpentry",
+        "workers": [
+            "Simone",
+            "Medrado"
+        ],
+        "operational area": "Public Space",
+        "address": "789 Pine St",
+        "equipments": [
+            "Saw",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1044",
+        "assignments": "Landscaping",
+        "workers": [
+            "Ryan",
+            "Almeida",
+            "Marinangelo"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1045",
+        "assignments": "Maintenance",
+        "workers": [
+            "Passos"
+        ],
+        "operational area": "Public Space",
+        "address": "123 Main St",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1046",
+        "assignments": "Landscaping",
+        "workers": [
+            "Torres",
+            "Edilson"
+        ],
+        "operational area": "Commercial Building",
+        "address": "202 Elm St",
+        "equipments": [
+            "Saw",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1047",
+        "assignments": "Plumbing",
+        "workers": [
+            "José Roberto"
+        ],
+        "operational area": "Residential Home",
+        "address": "123 Main St",
+        "equipments": [
+            "Wrench",
+            "Drill",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1048",
+        "assignments": "Cleaning",
+        "workers": [
+            "Tiago"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1049",
+        "assignments": "Carpentry",
+        "workers": [
+            "José Roberto",
+            "Paulo"
+        ],
+        "operational area": "Commercial Building",
+        "address": "202 Elm St",
+        "equipments": [
+            "Pliers",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1050",
+        "assignments": "Plumbing",
+        "workers": [
+            "Afonso",
+            "Francimar",
+            "Lira"
+        ],
+        "operational area": "Residential Home",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush",
+            "Ladder",
+            "Hammer",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1051",
+        "assignments": "Cleaning",
+        "workers": [
+            "Ricardo",
+            "Torres",
+            "Gonçalves"
+        ],
+        "operational area": "Public Space",
+        "address": "789 Pine St",
+        "equipments": [
+            "Hammer",
+            "Toolbox",
+            "Wrench",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1052",
+        "assignments": "Plumbing",
+        "workers": [
+            "Jilmar"
+        ],
+        "operational area": "Public Space",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1053",
+        "assignments": "Landscaping",
+        "workers": [
+            "Kesia"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Saw",
+            "Pliers",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1054",
+        "assignments": "Painting",
+        "workers": [
+            "Pires",
+            "Jailson",
+            "Torres"
+        ],
+        "operational area": "Commercial Building",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Paintbrush",
+            "Saw",
+            "Toolbox",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1055",
+        "assignments": "Maintenance",
+        "workers": [
+            "Valdemir"
+        ],
+        "operational area": "Public Space",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Ladder",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1056",
+        "assignments": "Cleaning",
+        "workers": [
+            "Lins",
+            "Manasses",
+            "Gomes"
+        ],
+        "operational area": "Public Space",
+        "address": "123 Main St",
+        "equipments": [
+            "Hammer",
+            "Pliers",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1057",
+        "assignments": "Plumbing",
+        "workers": [
+            "Valdemir"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Toolbox",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1058",
+        "assignments": "Electrical",
+        "workers": [
+            "Apolo"
+        ],
+        "operational area": "Public Space",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Hammer",
+            "Ladder",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1059",
+        "assignments": "Carpentry",
+        "workers": [
+            "Ricardo",
+            "Kesia",
+            "Alexandre"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1060",
+        "assignments": "Maintenance",
+        "workers": [
+            "Duarte",
+            "Edilson",
+            "Cesar"
+        ],
+        "operational area": "Commercial Building",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Drill",
+            "Hammer",
+            "Ladder",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1061",
+        "assignments": "Maintenance",
+        "workers": [
+            "Petrônio",
+            "Lindinalva",
+            "Luiz Carlos"
+        ],
+        "operational area": "Residential Home",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush",
+            "Hammer",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1062",
+        "assignments": "Electrical",
+        "workers": [
+            "Fabrício",
+            "Carlos",
+            "Pires"
+        ],
+        "operational area": "Commercial Building",
+        "address": "789 Pine St",
+        "equipments": [
+            "Toolbox",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1063",
+        "assignments": "Carpentry",
+        "workers": [
+            "Lins",
+            "Santos"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Saw",
+            "Wrench",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1064",
+        "assignments": "Electrical",
+        "workers": [
+            "Passos"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Hammer",
+            "Toolbox",
+            "Drill",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1065",
+        "assignments": "Plumbing",
+        "workers": [
+            "Lins",
+            "Silvino",
+            "Karina"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Pliers",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1066",
+        "assignments": "Landscaping",
+        "workers": [
+            "Viana"
+        ],
+        "operational area": "Commercial Building",
+        "address": "123 Main St",
+        "equipments": [
+            "Saw",
+            "Pliers",
+            "Hammer",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1067",
+        "assignments": "Electrical",
+        "workers": [
+            "Marinangelo",
+            "Gomes",
+            "Bezerra"
+        ],
+        "operational area": "Commercial Building",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Drill",
+            "Pliers",
+            "Toolbox",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1068",
+        "assignments": "Painting",
+        "workers": [
+            "Peixoto",
+            "Clodoaldo",
+            "Wandeclayson"
+        ],
+        "operational area": "Commercial Building",
+        "address": "202 Elm St",
+        "equipments": [
+            "Saw",
+            "Toolbox",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1069",
+        "assignments": "Painting",
+        "workers": [
+            "Celiane",
+            "Gonçalves",
+            "Oliveira"
+        ],
+        "operational area": "Public Space",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1070",
+        "assignments": "Carpentry",
+        "workers": [
+            "Lins",
+            "Edilberto"
+        ],
+        "operational area": "Commercial Building",
+        "address": "123 Main St",
+        "equipments": [
+            "Hammer",
+            "Pliers",
+            "Paintbrush",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1071",
+        "assignments": "Landscaping",
+        "workers": [
+            "Celdo"
+        ],
+        "operational area": "Commercial Building",
+        "address": "202 Elm St",
+        "equipments": [
+            "Pliers",
+            "Hammer",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1072",
+        "assignments": "Electrical",
+        "workers": [
+            "Wellington",
+            "Ricardo"
+        ],
+        "operational area": "Commercial Building",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Paintbrush",
+            "Toolbox",
+            "Saw",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1073",
+        "assignments": "Carpentry",
+        "workers": [
+            "Jilmar"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1074",
+        "assignments": "Electrical",
+        "workers": [
+            "Lira",
+            "Fabrício"
+        ],
+        "operational area": "Public Space",
+        "address": "789 Pine St",
+        "equipments": [
+            "Paintbrush",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1075",
+        "assignments": "Carpentry",
+        "workers": [
+            "Perez",
+            "Luiz Carlos"
+        ],
+        "operational area": "Commercial Building",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Wrench",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1076",
+        "assignments": "Maintenance",
+        "workers": [
+            "Luiz Carlos",
+            "Claudenice"
+        ],
+        "operational area": "Commercial Building",
+        "address": "707 Cherry Ave",
+        "equipments": [
+            "Toolbox",
+            "Wrench",
+            "Paintbrush",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1077",
+        "assignments": "Painting",
+        "workers": [
+            "Fernandes",
+            "Celiane"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Hammer",
+            "Pliers",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1078",
+        "assignments": "Landscaping",
+        "workers": [
+            "Luiz Carlos"
+        ],
+        "operational area": "Public Space",
+        "address": "202 Elm St",
+        "equipments": [
+            "Ladder",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1079",
+        "assignments": "Cleaning",
+        "workers": [
+            "Afonso",
+            "Valdemir"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1080",
+        "assignments": "Plumbing",
+        "workers": [
+            "Jailson",
+            "Gilvane"
+        ],
+        "operational area": "Residential Home",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Paintbrush",
+            "Ladder",
+            "Toolbox"
+        ]
+    },
+    {
+        "service_register": "SR-1081",
+        "assignments": "Carpentry",
+        "workers": [
+            "Petrônio",
+            "Costa"
+        ],
+        "operational area": "Public Space",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Pliers",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1082",
+        "assignments": "Plumbing",
+        "workers": [
+            "Karina"
+        ],
+        "operational area": "Residential Home",
+        "address": "789 Pine St",
+        "equipments": [
+            "Drill",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1083",
+        "assignments": "Maintenance",
+        "workers": [
+            "Sandro"
+        ],
+        "operational area": "Public Space",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1084",
+        "assignments": "Plumbing",
+        "workers": [
+            "Gonçalves",
+            "Lira"
+        ],
+        "operational area": "Residential Home",
+        "address": "123 Main St",
+        "equipments": [
+            "Pliers",
+            "Ladder",
+            "Wrench",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1085",
+        "assignments": "Landscaping",
+        "workers": [
+            "Simone",
+            "Costa",
+            "Karina"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Drill",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1086",
+        "assignments": "Electrical",
+        "workers": [
+            "Celdo",
+            "Lindinalva",
+            "Ailton"
+        ],
+        "operational area": "Commercial Building",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Toolbox",
+            "Pliers",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1087",
+        "assignments": "Maintenance",
+        "workers": [
+            "Bispo"
+        ],
+        "operational area": "Public Space",
+        "address": "789 Pine St",
+        "equipments": [
+            "Saw",
+            "Ladder",
+            "Drill",
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1088",
+        "assignments": "Painting",
+        "workers": [
+            "Carlos",
+            "Celiane",
+            "Bezerra"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1089",
+        "assignments": "Landscaping",
+        "workers": [
+            "Fonseca",
+            "Gonçalves",
+            "Petrônio"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "789 Pine St",
+        "equipments": [
+            "Wrench",
+            "Hammer",
+            "Toolbox",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1090",
+        "assignments": "Landscaping",
+        "workers": [
+            "Gonçalves",
+            "Simone",
+            "Mendes"
+        ],
+        "operational area": "Residential Home",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Wrench",
+            "Hammer",
+            "Paintbrush",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1091",
+        "assignments": "Plumbing",
+        "workers": [
+            "Afonso"
+        ],
+        "operational area": "Public Space",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Toolbox",
+            "Wrench"
+        ]
+    },
+    {
+        "service_register": "SR-1092",
+        "assignments": "Cleaning",
+        "workers": [
+            "Fabrício",
+            "Brito",
+            "Oliveira"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Ladder",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1093",
+        "assignments": "Electrical",
+        "workers": [
+            "Lindinalva",
+            "Perez",
+            "Santos"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "303 Birch Ave",
+        "equipments": [
+            "Hammer",
+            "Pliers",
+            "Saw",
+            "Paintbrush"
+        ]
+    },
+    {
+        "service_register": "SR-1094",
+        "assignments": "Painting",
+        "workers": [
+            "Viana"
+        ],
+        "operational area": "Residential Home",
+        "address": "456 Oak Ave",
+        "equipments": [
+            "Ladder",
+            "Wrench",
+            "Pliers"
+        ]
+    },
+    {
+        "service_register": "SR-1095",
+        "assignments": "Electrical",
+        "workers": [
+            "Viana",
+            "Rogério"
+        ],
+        "operational area": "Commercial Building",
+        "address": "505 Walnut Ave",
+        "equipments": [
+            "Hammer",
+            "Toolbox",
+            "Wrench",
+            "Saw"
+        ]
+    },
+    {
+        "service_register": "SR-1096",
+        "assignments": "Cleaning",
+        "workers": [
+            "Simone"
+        ],
+        "operational area": "Public Space",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1097",
+        "assignments": "Painting",
+        "workers": [
+            "Torres",
+            "Paulo",
+            "Bispo"
+        ],
+        "operational area": "Residential Home",
+        "address": "404 Cedar St",
+        "equipments": [
+            "Toolbox",
+            "Hammer",
+            "Ladder"
+        ]
+    },
+    {
+        "service_register": "SR-1098",
+        "assignments": "Painting",
+        "workers": [
+            "Francimar",
+            "Mendes"
+        ],
+        "operational area": "Residential Home",
+        "address": "123 Main St",
+        "equipments": [
+            "Hammer"
+        ]
+    },
+    {
+        "service_register": "SR-1099",
+        "assignments": "Plumbing",
+        "workers": [
+            "José Roberto",
+            "Edilson",
+            "Lins"
+        ],
+        "operational area": "Industrial Facility",
+        "address": "101 Maple Ave",
+        "equipments": [
+            "Pliers",
+            "Drill"
+        ]
+    },
+    {
+        "service_register": "SR-1100",
+        "assignments": "Maintenance",
+        "workers": [
+            "Duarte",
+            "Simone",
+            "Valdemir"
+        ],
+        "operational area": "Commercial Building",
+        "address": "606 Spruce St",
+        "equipments": [
+            "Pliers",
+            "Hammer"
+        ]
+    }
+]
