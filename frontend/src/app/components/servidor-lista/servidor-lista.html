@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>Lista de Servidores</h2>
+  
+  <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th>ID</th>
+        <th>Matrícula</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Situação</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (servidor of servidores; track servidor.id) {
+        <tr>
+          <td>{{ servidor.id }}</td>
+          <td>{{ servidor.matricula }}</td>
+          <td>{{ servidor.nome }}</td>
+          <td>{{ servidor.email }}</td>
+          <td>{{ servidor.situacao }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" style="text-align: center;">Nenhum servidor encontrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
