@@ -1,0 +1,36 @@
+<div class="container" style="padding: 20px;">
+  <h2>Escala Mensal - Dezembro/2025</h2>
+
+  <div style="overflow-x: auto;"> <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+      
+      <thead>
+        <tr style="background-color: #eee;">
+          <th style="min-width: 200px; position: sticky; left: 0; background-color: #eee;">Servidor</th>
+          @for (dia of diasDoMes; track dia) {
+            <th style="min-width: 40px;">
+              {{ dia.getDate() }}<br>
+              <small>{{ dia | date:'EE' }}</small>
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (servidor of servidores; track servidor.id) {
+          <tr>
+            <td style="position: sticky; left: 0; background-color: white; font-weight: bold; text-align: left; padding-left: 10px;">
+              {{ servidor.nome }}
+            </td>
+
+            @for (dia of diasDoMes; track dia) {
+              <td>
+                {{ getEscala(servidor.id, dia) }}
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+
+    </table>
+  </div>
+</div>
