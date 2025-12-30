@@ -128,6 +128,28 @@ export class EscalaMensalComponent implements OnInit {
     return escalaEncontrada ? escalaEncontrada.tipoServico.codigo : '-';
   }
 
+  // Calcula o total de horas do servidor no mês visível
+  calcularTotalHoras(servidorId: number | undefined): number {
+    if (!servidorId) return 0;
+
+    // Filtra as escalas que pertencem a este servidor
+    const escalasDoMes = this.escalas.filter(e => {
+      if (e.servidor.id !== servidorId) return false;
+
+      // Verifica se a data da escala bate com o mês/ano atual da tela
+      // A data vem do Java como string "2025-12-28"
+      const partesData = e.data.split('-'); 
+      const anoEscala = parseInt(partesData[0]);
+      const mesEscala = parseInt(partesData[1]) - 1; // Mês no Java é 1-12, no JS é 0-11
+
+      return anoEscala === this.anoAtual && mesEscala === this.mesAtual;
+    });
+
+    // Soma as horas totais de cada escala encontrada
+    // O reduce percorre a lista somando: acumulador + horas da escala atual
+    return escalasDoMes.reduce((total, escala) => total + escala.tipoServico.horasTotais, 0);
+  }
+
   abrirModal(servidor: Servidor, data: Date) {
     // 1. Prepara os dados do modal
     this.escalaSelecionada = {

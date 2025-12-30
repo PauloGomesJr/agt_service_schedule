@@ -19,7 +19,10 @@
               <small>{{ dia | date:'EE' }}</small>
             </th>
           }
-        </tr>
+          <th style="min-width: 80px; background-color: #34495e; color: white; position: sticky; right: 0; z-index: 2;">
+            Total
+          </th>
+          </tr>
       </thead>
 
       <tbody>
@@ -34,6 +37,9 @@
                  {{ getEscala(servidor.id, dia) }}
               </td>
             }
+            <td style="font-weight: bold; background-color: #ecf0f1; position: sticky; right: 0; text-align: center;">
+            {{ calcularTotalHoras(servidor.id) }}h
+           </td>
           </tr>
         }
       </tbody>

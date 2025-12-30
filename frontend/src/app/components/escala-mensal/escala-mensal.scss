@@ -81,3 +81,17 @@
 td:hover {
   background-color: #e8f6fd; /* Azulzinho claro */
 }
+
+/* Estilo para a coluna de Total de Horas */
+th:last-child, td:last-child {
+  border-left: 2px solid #bdc3c7; /* Uma borda mais grossa para separar */
+}
+
+/* Garante que o sticky funcione bem */
+td:last-child {
+  z-index: 1; /* Fica acima das células normais ao rolar */
+}
+
+th:last-child {
+  z-index: 3; /* Fica acima de tudo no cabeçalho */
+}
