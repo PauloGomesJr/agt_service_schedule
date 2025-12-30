@@ -26,10 +26,11 @@ export class EscalaMensalComponent implements OnInit {
   tiposServico: TipoServico[] = [];
   escalas: Escala[] = [];
 
-  // Dados de Controle Visual
+  // === MUDANÇA 1: Inicializar com a data de HOJE ===
+  dataReferencia = new Date(); // Data base para o calendário
+  anoAtual = this.dataReferencia.getFullYear();
+  mesAtual = this.dataReferencia.getMonth();
   diasDoMes: Date[] = [];
-  anoAtual: number = 2025;
-  mesAtual: number = 11; // Dezembro (0-11 no Javascript)
 
 // === CONTROLE DO MODAL ===
   modalAberto = false;
@@ -64,6 +65,33 @@ export class EscalaMensalComponent implements OnInit {
       this.diasDoMes.push(new Date(data));
       data.setDate(data.getDate() + 1);
     }
+  }
+
+  // === MUDANÇA 2: Função para Navegar ===
+  alterarMes(delta: number) {
+    // delta será -1 (voltar) ou +1 (avançar)
+    this.mesAtual += delta;
+
+    // Ajuste de virada de ano
+    if (this.mesAtual > 11) {
+      this.mesAtual = 0; // Janeiro
+      this.anoAtual++;
+    } else if (this.mesAtual < 0) {
+      this.mesAtual = 11; // Dezembro
+      this.anoAtual--;
+    }
+
+    // Regera o calendário visual
+    this.gerarDiasDoMes();
+    
+    // Opcional: Aqui poderíamos recarregar dados do backend se tivessmos filtro por data
+    // this.carregarDados(); 
+  }
+
+  // === MUDANÇA 3: Helper para o Título ===
+  // Retorna um objeto Date representando o mês que estamos vendo
+  getDataVisualizacao(): Date {
+    return new Date(this.anoAtual, this.mesAtual, 1);
   }
 
   carregarDados() {

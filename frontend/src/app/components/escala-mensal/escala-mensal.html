@@ -1,5 +1,12 @@
 <div class="container" style="padding: 20px;">
-  <h2>Escala Mensal - Dezembro/2025</h2>
+  <div class="header-nav">
+    <button (click)="alterarMes(-1)" class="btn-nav">❮ Anterior</button>
+    
+    <h2>{{ getDataVisualizacao() | date:'MMMM yyyy' | titlecase }}</h2>
+    
+    <button (click)="alterarMes(1)" class="btn-nav">Próximo ❯</button>
+  </div>
+
 
   <div style="overflow-x: auto;"> <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
       

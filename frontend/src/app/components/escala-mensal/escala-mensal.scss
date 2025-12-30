@@ -9,6 +9,40 @@
   z-index: 1000;
 }
 
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+
+  h2 {
+    margin: 0;
+    color: #2c3e50;
+    text-transform: capitalize; /* Garante inicial maiúscula */
+  }
+}
+
+/* Botões de Navegação */
+.btn-nav {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: #2980b9;
+  }
+}
+
+
 /* A janela branca */
 .modal-content {
   background: white;
