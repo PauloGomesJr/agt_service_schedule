@@ -23,8 +23,8 @@
             </td>
 
             @for (dia of diasDoMes; track dia) {
-              <td>
-                {{ getEscala(servidor.id, dia) }}
+              <td (click)="abrirModal(servidor, dia)" style="cursor: pointer; position: relative;">
+                 {{ getEscala(servidor.id, dia) }}
               </td>
             }
           </tr>
@@ -34,3 +34,35 @@
     </table>
   </div>
 </div>
+
+@if (modalAberto) {
+<div class="modal-backdrop">
+  
+  <div class="modal-content">
+    <h3>Editar Escala</h3>
+    
+    <p>
+      <strong>Servidor:</strong> {{ escalaSelecionada.nomeServidor }} <br>
+      <strong>Data:</strong> {{ escalaSelecionada.data | date:'dd/MM/yyyy' }}
+    </p>
+
+    <div class="form-group">
+      <label>Selecione o Turno:</label>
+      <select [(ngModel)]="escalaSelecionada.tipoServicoId" class="form-control">
+        <option [ngValue]="null">Selecione...</option>
+        @for (tipo of tiposServico; track tipo.id) {
+          <option [value]="tipo.id">
+            {{ tipo.codigo }} - {{ tipo.descricao }} ({{ tipo.horaInicio }} às {{ tipo.horaFim }})
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
+      <button (click)="salvarEscala()" class="btn-salvar">Salvar</button>
+    </div>
+  </div>
+
+</div>
+}

@@ -38,15 +38,12 @@ public class EscalaDiariaService {
         TipoServico tipoServico = tipoServicoRepository.findById(dto.getTipoServicoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de Serviço não encontrado ID: " + dto.getTipoServicoId()));
 
-        // 3. Montar a entidade
-        EscalaDiaria escala = new EscalaDiaria();
-        
-        // Se já tiver ID, busca do banco para atualizar (edição)
-        if (dto.getId() != null) {
-            escala = escalaRepository.findById(dto.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Escala não encontrada para edição"));
-        }
+        // 3. Lógica de UPSERT (Update or Insert)
+        // Tenta achar uma escala existente para esse servidor nessa data
+        EscalaDiaria escala = escalaRepository.findByServidorIdAndData(dto.getServidorId(), dto.getData())
+                .orElse(new EscalaDiaria()); // Se não achar, cria uma nova em branco
 
+        // Atualiza os dados (seja nova ou antiga)
         escala.setData(dto.getData());
         escala.setServidor(servidor);
         escala.setTipoServico(tipoServico);
@@ -55,7 +52,7 @@ public class EscalaDiariaService {
         // 4. Salvar
         return escalaRepository.save(escala);
     }
-
+    
     public List<EscalaDiaria> listarTodas() {
         return escalaRepository.findAll();
     }
