@@ -212,8 +212,23 @@ export class EscalaMensalComponent implements OnInit {
         this.fecharModal();
       },
       error: (err) => {
-        console.error(err);
-        alert('Erro ao salvar escala.');
+        console.error('Erro detalhado:', err);
+        
+        let mensagem = 'Erro ao salvar escala.';
+
+        // Tenta extrair a mensagem específica enviada pelo Backend (Java)
+        if (err.error) {
+          if (err.error.message) {
+             // Formato padrão do Spring Boot
+             mensagem = err.error.message;
+          } else if (typeof err.error === 'string') {
+             // Caso venha como texto puro
+             mensagem = err.error;
+          }
+        }
+
+        // Mostra o alerta na tela com a explicação do conflito
+        alert('⚠️ Não foi possível salvar:\n' + mensagem);
       }
     });
   }

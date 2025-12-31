@@ -34,4 +34,10 @@ public class TipoServico implements Serializable{
 
     @Column(nullable = false, name = "gera_adicional_noturno")
     private Boolean geraAdicionalNoturno = false;
+
+// Verifica se o turno vira a noite (Ex: Começa 19h, Termina 07h)
+    public boolean cruzaMeiaNoite() {
+        if (horaInicio == null || horaFim == null) return false;
+        return horaFim.isBefore(horaInicio);
+    }
 }
