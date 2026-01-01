@@ -26,6 +26,28 @@ public class TipoServicoService {
         return repository.save(tipoServico);
     }
 
+    @Transactional
+    public TipoServico atualizar(Long id, TipoServico atualizado) {
+        return repository.findById(id)
+                .map(existente -> {
+                    existente.setCodigo(atualizado.getCodigo().toUpperCase());
+                    existente.setDescricao(atualizado.getDescricao());
+                    existente.setHoraInicio(atualizado.getHoraInicio());
+                    existente.setHoraFim(atualizado.getHoraFim());
+                    existente.setHorasTotais(atualizado.getHorasTotais());
+                    existente.setHorasNoturnas(atualizado.getHorasNoturnas());
+                    existente.setGeraAdicionalNoturno(atualizado.getGeraAdicionalNoturno()); 
+                    return repository.save(existente);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de serviço não encontrado"));
+    }
+
+    @Transactional
+    public void excluir(Long id) {
+        // Nota: Futuramente validaremos se existem escalas usando este tipo antes de excluir
+        repository.deleteById(id);
+    }
+
     public List<TipoServico> listarTodos() {
         return repository.findAll();
     }
