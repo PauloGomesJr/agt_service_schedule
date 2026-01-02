@@ -33,23 +33,11 @@ public class DataSeeder implements CommandLineRunner {
             turnoC.setHorasNoturnas(8.0);   // <--- DECIMAL (Com ponto)
             turnoC.setGeraAdicionalNoturno(true);
 
-            // 2. Criar Turno M (Manhã: 07:00 às 13:00)
-            TipoServico turnoM = new TipoServico();
-            turnoM.setCodigo("M");
-            turnoM.setDescricao("Manhã");
-            turnoM.setHoraInicio(LocalTime.of(7, 0));
-            turnoM.setHoraFim(LocalTime.of(13, 0));
-            
-            // AQUI ESTAVA O ERRO, AGORA ESTÁ CORRIGIDO:
-            turnoM.setHorasTotais(6);       // Use 'turnoM', não 'turnoC'
-            
-            turnoM.setHorasNoturnas(0.0);
-            turnoM.setGeraAdicionalNoturno(false);
 
             // Salva no banco
-            tipoServicoRepository.saveAll(List.of(turnoC, turnoM));
+            tipoServicoRepository.saveAll(List.of(turnoC));
             
-            System.out.println("---- DADOS DE TESTE (Turnos C e M) CRIADOS COM SUCESSO! ----");
+            System.out.println("---- DADOS DE TESTE (Turnos C) CRIADO COM SUCESSO! ----");
         }
     }
     

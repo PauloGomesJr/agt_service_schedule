@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
-// import { ServidorListaComponent } from './components/servidor-lista/servidor-lista'; <-- Remova este
-import { EscalaMensalComponent } from './components/escala-mensal/escala-mensal'; // <-- Adicione este
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+
+// REMOVA O IMPORT DO ESCALA MENSAL AQUI DE CIMA (se tiver)
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [EscalaMensalComponent], // <-- Atualize aqui
+  // REMOVA O EscalaMensalComponent DESTA LISTA ABAIXO:
+  imports: [CommonModule, RouterOutlet], 
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
-export class App {
-  title = 'frontend';
+export class AppComponent {
+  title = 'sistema-escala-transito';
 }

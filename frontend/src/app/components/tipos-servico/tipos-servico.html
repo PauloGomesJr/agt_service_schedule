@@ -1,0 +1,98 @@
+<div class="container">
+  
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>⚙️ Tipos de Serviço (Turnos)</h2>
+    @if (!emEdicao) {
+      <button (click)="novo()" class="btn btn-success">+ Novo Turno</button>
+    }
+  </div>
+
+  @if (!emEdicao) {
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th width="10%">Cód</th>
+            <th width="30%">Descrição</th>
+            <th width="20%">Horário</th>
+            <th width="10%">Total</th>
+            <th width="10%">Noturna</th>
+            <th width="20%">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+        @for (item of lista; track $index) {
+          <tr>
+            <td>
+              <strong style="background: #eee; padding: 2px 6px; border-radius: 4px;">
+                {{ item.codigo }}
+              </strong>
+            </td>
+            <td>{{ item.descricao }}</td>
+            <td>{{ item.horaInicio }} - {{ item.horaFim }}</td>
+            <td>{{ item.horasTotais }}h</td>
+            <td>{{ item.horasNoturnas }}h</td>
+            <td>
+              <button (click)="editar(item)" class="btn btn-primary">✏️</button>
+              <button (click)="excluir(item.id!)" class="btn btn-danger">🗑️</button>
+            </td>
+          </tr>
+        }
+        
+        @empty {
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 20px; color: gray;">
+              Nenhum turno cadastrado ainda.
+            </td>
+          </tr>
+        }
+      </tbody>
+      </table>
+    </div>
+  }
+
+  @if (emEdicao) {
+    <div class="card">
+      <h3>{{ emEdicao.id ? 'Editar' : 'Criar' }} Turno</h3>
+      
+      <div class="form-grid">
+        <div>
+          <label>Código (Sigla)</label>
+          <input [(ngModel)]="emEdicao.codigo" maxlength="2" style="text-transform: uppercase;" placeholder="Ex: D">
+          <small style="color: gray">Use 1 ou 2 letras</small>
+        </div>
+        <div>
+          <label>Descrição</label>
+          <input [(ngModel)]="emEdicao.descricao" placeholder="Ex: Diurno Extra">
+        </div>
+        <div>
+          <label>Início</label>
+          <input type="time" [(ngModel)]="emEdicao.horaInicio">
+        </div>
+        <div>
+          <label>Fim</label>
+          <input type="time" [(ngModel)]="emEdicao.horaFim">
+        </div>
+        <div>
+          <label>Horas Totais (Inteiro)</label>
+          <input type="number" [(ngModel)]="emEdicao.horasTotais">
+        </div>
+        <div>
+          <label>Horas Noturnas (Decimal)</label>
+          <input type="number" [(ngModel)]="emEdicao.horasNoturnas" step="0.5">
+        </div>
+        
+        <div style="grid-column: span 2; display: flex; align-items: center; gap: 10px; background: #eef; padding: 10px; border-radius: 4px;">
+          <input type="checkbox" [(ngModel)]="emEdicao.geraAdicionalNoturno" style="width: auto;">
+          <label style="margin: 0; cursor: pointer;">Gera Adicional Noturno?</label>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button (click)="cancelar()" class="btn btn-secondary">Cancelar</button>
+        <button (click)="salvar()" class="btn btn-success">Salvar Turno</button>
+      </div>
+    </div>
+  }
+
+</div>
