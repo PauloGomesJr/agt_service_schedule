@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necessário para selecionar datas/serviços
+import { FormsModule } from '@angular/forms'; 
 
 // Services
-import { ServidorService } from '../../services/servidor.service'; // Verifique o nome do arquivo se é .service ou apenas .ts
+import { ServidorService } from '../../services/servidor.service'; 
 import { TipoServicoService } from '../../services/tipo-servico';
 import { EscalaService } from '../../services/escala';
 
@@ -24,22 +24,25 @@ export class EscalaMensalComponent implements OnInit {
   // Dados do Banco
   servidores: Servidor[] = [];
   tiposServico: TipoServico[] = [];
-  escalas: Escala[] = [];
+  
+  // Lista original (para cálculos e lógica)
+  escalas: Escala[] = []; 
+  
+  // === MUDANÇA 1: Novo Objeto para Visualização Rápida ===
+  // Vai guardar: { 10: { 1: 'A', 2: 'F' }, 11: { ... } }
+  mapaEscalas: any = {}; 
 
-  // === MUDANÇA 1: Inicializar com a data de HOJE ===
-  dataReferencia = new Date(); // Data base para o calendário
+  dataReferencia = new Date(); 
   anoAtual = this.dataReferencia.getFullYear();
   mesAtual = this.dataReferencia.getMonth();
   diasDoMes: Date[] = [];
 
-// === CONTROLE DO MODAL ===
   modalAberto = false;
   
-  // Objeto temporário para edição
   escalaSelecionada: any = {
     servidorId: null,
     nomeServidor: '',
-    data: null, // Objeto Date
+    data: null, 
     tipoServicoId: null
   };
 
@@ -57,109 +60,100 @@ export class EscalaMensalComponent implements OnInit {
 
   gerarDiasDoMes() {
     this.diasDoMes = [];
-    // Cria data: Ano 2025, Mês 11 (Dez), Dia 1
     const data = new Date(this.anoAtual, this.mesAtual, 1);
-    
-    // Enquanto estivermos no mesmo mês, adiciona o dia na lista
     while (data.getMonth() === this.mesAtual) {
       this.diasDoMes.push(new Date(data));
       data.setDate(data.getDate() + 1);
     }
   }
 
-  // === MUDANÇA 2: Função para Navegar ===
   alterarMes(delta: number) {
-    // delta será -1 (voltar) ou +1 (avançar)
     this.mesAtual += delta;
 
-    // Ajuste de virada de ano
     if (this.mesAtual > 11) {
-      this.mesAtual = 0; // Janeiro
+      this.mesAtual = 0; 
       this.anoAtual++;
     } else if (this.mesAtual < 0) {
-      this.mesAtual = 11; // Dezembro
+      this.mesAtual = 11; 
       this.anoAtual--;
     }
 
-    // Regera o calendário visual
     this.gerarDiasDoMes();
-    
-    // Opcional: Aqui poderíamos recarregar dados do backend se tivessmos filtro por data
+    // Importante: Recarregar os dados se o backend filtrar por mês
     // this.carregarDados(); 
   }
 
-  // === MUDANÇA 3: Helper para o Título ===
-  // Retorna um objeto Date representando o mês que estamos vendo
   getDataVisualizacao(): Date {
     return new Date(this.anoAtual, this.mesAtual, 1);
   }
 
   carregarDados() {
-    // 1. Carrega Servidores
     this.servidorService.listar().subscribe(dados => {
       this.servidores = dados;
       this.cdr.detectChanges();
     });
 
-    // 2. Carrega Tipos de Serviço (A, B...)
     this.tipoServicoService.listar().subscribe(dados => {
       this.tiposServico = dados;
       this.cdr.detectChanges();
     });
 
-    // 3. Carrega as Escalas já salvas
     this.escalaService.listar().subscribe(dados => {
-      this.escalas = dados;
+      this.escalas = dados; // Guarda a lista original
+      
+      // === MUDANÇA 2: Processar a lista para o formato de Mapa ===
+      this.atualizarMapaVisualizacao();
+
       this.cdr.detectChanges();
     });
   }
 
-  // Função auxiliar: Pega o código da escala para um servidor num dia específico
-  getEscala(servidorId: number | undefined, data: Date): string {
-    if (!servidorId) return '';
-    // Formata a data do calendário para YYYY-MM-DD (formato do Java)
-    const dataStr = data.toISOString().split('T')[0];
+  // === MUDANÇA 3: Função Mágica que transforma Lista em Mapa ===
+  atualizarMapaVisualizacao() {
+    this.mapaEscalas = {}; // Zera o mapa
 
-    // Procura na lista de escalas baixadas
-    const escalaEncontrada = this.escalas.find(e => 
-      e.servidor.id === servidorId && e.data === dataStr
-    );
+    this.escalas.forEach(escala => {
+        // A data vem como string "YYYY-MM-DD"
+        const partes = escala.data.split('-'); 
+        const dia = parseInt(partes[2]); // Pega o dia (ex: 5)
 
-    return escalaEncontrada ? escalaEncontrada.tipoServico.codigo : '-';
+        const idServidor = escala.servidor.id;
+        
+        // CORREÇÃO: Só prossegue se o ID existir
+        if (idServidor) {
+            // Se ainda não tem uma "gaveta" pra esse servidor, cria uma
+            if (!this.mapaEscalas[idServidor]) {
+                this.mapaEscalas[idServidor] = {};
+            }
+
+            // Guarda o código no dia correspondente
+            this.mapaEscalas[idServidor][dia] = escala.tipoServico.codigo;
+        }
+    });
+    
+    console.log('Mapa gerado para visualização:', this.mapaEscalas);
   }
 
-  // Calcula o total de horas do servidor no mês visível
   calcularTotalHoras(servidorId: number | undefined): number {
     if (!servidorId) return 0;
-
-    // Filtra as escalas que pertencem a este servidor
     const escalasDoMes = this.escalas.filter(e => {
       if (e.servidor.id !== servidorId) return false;
-
-      // Verifica se a data da escala bate com o mês/ano atual da tela
-      // A data vem do Java como string "2025-12-28"
       const partesData = e.data.split('-'); 
       const anoEscala = parseInt(partesData[0]);
-      const mesEscala = parseInt(partesData[1]) - 1; // Mês no Java é 1-12, no JS é 0-11
-
+      const mesEscala = parseInt(partesData[1]) - 1; 
       return anoEscala === this.anoAtual && mesEscala === this.mesAtual;
     });
-
-    // Soma as horas totais de cada escala encontrada
-    // O reduce percorre a lista somando: acumulador + horas da escala atual
     return escalasDoMes.reduce((total, escala) => total + escala.tipoServico.horasTotais, 0);
   }
 
   abrirModal(servidor: Servidor, data: Date) {
-    // 1. Prepara os dados do modal
     this.escalaSelecionada = {
       servidorId: servidor.id,
       nomeServidor: servidor.nome,
       data: data,
-      tipoServicoId: null // Começa vazio, ou poderíamos tentar achar o valor atual
+      tipoServicoId: null 
     };
 
-    // Tenta pré-selecionar o valor se já existir escala nesse dia
     const dataStr = data.toISOString().split('T')[0];
     const escalaExistente = this.escalas.find(e => 
       e.servidor.id === servidor.id && e.data === dataStr
@@ -168,8 +162,6 @@ export class EscalaMensalComponent implements OnInit {
     if (escalaExistente) {
       this.escalaSelecionada.tipoServicoId = escalaExistente.tipoServico.id;
     }
-
-    // 2. Abre a janela
     this.modalAberto = true;
   }
 
@@ -183,10 +175,7 @@ export class EscalaMensalComponent implements OnInit {
       return;
     }
 
-    // 1. Monta o DTO para enviar ao Java
-    // Ajuste de fuso horário simples para garantir que a data vá correta (YYYY-MM-DD)
-    // O trque do toISOString().split('T')[0] funciona bem para datas locais geradas sem hora
-    const dataFormatada = this.escalaSelecionada.data.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+    const dataFormatada = this.escalaSelecionada.data.toLocaleDateString('en-CA'); 
 
     const dto: EscalaDTO = {
       servidorId: this.escalaSelecionada.servidorId,
@@ -195,42 +184,60 @@ export class EscalaMensalComponent implements OnInit {
       observacao: 'Inserido via Web'
     };
 
-    // 2. Chama o serviço
     this.escalaService.salvar(dto).subscribe({
       next: (novaEscala) => {
-        console.log('Salvo com sucesso!', novaEscala);
-        
-        // 3. Atualiza a lista localmente para refletir na tela imediatamente
-        // Remove a antiga se houver (para não duplicar na lista visual)
+        // Atualiza a LISTA
         this.escalas = this.escalas.filter(e => 
           !(e.servidor.id === novaEscala.servidor.id && e.data === novaEscala.data)
         );
-        // Adiciona a nova
         this.escalas.push(novaEscala);
         
-        this.cdr.detectChanges(); // Força atualização visual
+        // === MUDANÇA 4: Atualiza o MAPA visual ===
+        this.atualizarMapaVisualizacao();
+
+        this.cdr.detectChanges(); 
         this.fecharModal();
       },
       error: (err) => {
         console.error('Erro detalhado:', err);
-        
         let mensagem = 'Erro ao salvar escala.';
-
-        // Tenta extrair a mensagem específica enviada pelo Backend (Java)
-        if (err.error) {
-          if (err.error.message) {
-             // Formato padrão do Spring Boot
+        if (err.error && err.error.message) {
              mensagem = err.error.message;
-          } else if (typeof err.error === 'string') {
-             // Caso venha como texto puro
+        } else if (err.error && typeof err.error === 'string') {
              mensagem = err.error;
-          }
         }
-
-        // Mostra o alerta na tela com a explicação do conflito
         alert('⚠️ Não foi possível salvar:\n' + mensagem);
       }
     });
+  }
+
+  // === MUDANÇA 5: O getTurno agora lê do MAPA, não da lista ===
+  getTurno(servidor: any, dia: number): string {
+    // CORREÇÃO: Se o servidor não tiver ID (por algum erro de carga), retorna vazio
+    if (!servidor.id) return '';
+
+    // Agora é seguro acessar
+    if (this.mapaEscalas && this.mapaEscalas[servidor.id]) {
+        return this.mapaEscalas[servidor.id][dia] || '';
+    }
+    return '';
+  }
+
+  obterClasseTurno(codigo: string | undefined): string {
+    if (!codigo) return ''; 
+
+    switch (codigo.toUpperCase()) {
+      case 'C':
+        return 'turno-noite';
+      case 'A': 
+        return 'turno-manha';
+      case 'M': 
+        return 'turno-manha';
+      case 'F':
+        return 'turno-folga';
+      default:
+        return 'turno-padrao'; 
+    }
   }
 
 }

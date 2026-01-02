@@ -33,8 +33,15 @@
             </td>
 
             @for (dia of diasDoMes; track dia) {
-              <td (click)="abrirModal(servidor, dia)" style="cursor: pointer; position: relative;">
-                 {{ getEscala(servidor.id, dia) }}
+              <td (click)="abrirModal(servidor, dia)" style="text-align: center; cursor: pointer;">
+  
+                <span class="turno-badge" 
+                      [ngClass]="obterClasseTurno(getTurno(servidor, dia.getDate()))">
+                      
+                  {{ getTurno(servidor, dia.getDate()) || '-' }}
+                  
+                </span>
+
               </td>
             }
             <td style="font-weight: bold; background-color: #ecf0f1; position: sticky; right: 0; text-align: center;">

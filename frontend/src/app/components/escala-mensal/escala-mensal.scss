@@ -95,3 +95,51 @@ td:last-child {
 th:last-child {
   z-index: 3; /* Fica acima de tudo no cabeçalho */
 }
+
+/* Estilo base para qualquer turno */
+.turno-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px; /* Bordas arredondadas */
+  font-weight: bold;
+  font-size: 0.9rem;
+  min-width: 25px; /* Garante que letras finas fiquem centralizadas */
+  text-align: center;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.turno-badge:hover {
+  transform: scale(1.1); /* Efeito de zoom leve ao passar o mouse */
+}
+
+/* --- CORES ESPECÍFICAS --- */
+
+/* C - Plantão Noturno (Azul Escuro Profundo) */
+.turno-noite {
+  background-color: #2c3e50;
+  color: #ffffff;
+  border: 1px solid #1a252f;
+}
+
+/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
+.turno-manha {
+  background-color: #f1c40f;
+  color: #333333; /* Texto escuro para contraste */
+  border: 1px solid #d4ac0d;
+}
+
+/* F - Folga (Cinza Claro/Neutro) */
+.turno-folga {
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  border: 1px solid #bdc3c7;
+}
+
+/* Padrão (para turnos novos ou desconhecidos) */
+.turno-padrao {
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ccc;
+}
