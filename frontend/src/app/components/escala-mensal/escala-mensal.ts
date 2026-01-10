@@ -79,8 +79,9 @@ export class EscalaMensalComponent implements OnInit {
     }
 
     this.gerarDiasDoMes();
-    // Importante: Recarregar os dados se o backend filtrar por mês
-    // this.carregarDados(); 
+    
+    // === IMPORTANTE: Recalcular o mapa para limpar os dados do mês anterior e mostrar os novos
+    this.atualizarMapaVisualizacao(); 
   }
 
   getDataVisualizacao(): Date {
@@ -109,29 +110,38 @@ export class EscalaMensalComponent implements OnInit {
   }
 
   // === MUDANÇA 3: Função Mágica que transforma Lista em Mapa ===
+ // Substitua este método inteiro
   atualizarMapaVisualizacao() {
-    this.mapaEscalas = {}; // Zera o mapa
+    this.mapaEscalas = {}; // Zera o mapa visual
 
     this.escalas.forEach(escala => {
-        // A data vem como string "YYYY-MM-DD"
+        // A data vem do Banco como string "YYYY-MM-DD" (Ex: "2025-01-05")
         const partes = escala.data.split('-'); 
-        const dia = parseInt(partes[2]); // Pega o dia (ex: 5)
-
-        const idServidor = escala.servidor.id;
         
-        // CORREÇÃO: Só prossegue se o ID existir
-        if (idServidor) {
-            // Se ainda não tem uma "gaveta" pra esse servidor, cria uma
-            if (!this.mapaEscalas[idServidor]) {
-                this.mapaEscalas[idServidor] = {};
-            }
+        const anoEscala = parseInt(partes[0]);        // 2025
+        const mesEscala = parseInt(partes[1]) - 1;    // 0 (Janeiro) -> O array do JS começa em 0, o do Java em 1
+        const dia = parseInt(partes[2]);              // 5
 
-            // Guarda o código no dia correspondente
-            this.mapaEscalas[idServidor][dia] = escala.tipoServico.codigo;
+        // === A CORREÇÃO ESTÁ AQUI ===
+        // Só mostramos a escala se ela pertencer ao Mês e Ano que estamos vendo na tela
+        if (anoEscala === this.anoAtual && mesEscala === this.mesAtual) {
+            
+            const idServidor = escala.servidor.id;
+            
+            // Verifica se o servidor tem ID válido
+            if (idServidor) {
+                // Se ainda não tem uma "gaveta" pra esse servidor, cria uma
+                if (!this.mapaEscalas[idServidor]) {
+                    this.mapaEscalas[idServidor] = {};
+                }
+
+                // Guarda o código no dia correspondente
+                this.mapaEscalas[idServidor][dia] = escala.tipoServico.codigo;
+            }
         }
     });
     
-    console.log('Mapa gerado para visualização:', this.mapaEscalas);
+    console.log(`Mapa gerado para ${this.mesAtual + 1}/${this.anoAtual}:`, this.mapaEscalas);
   }
 
   calcularTotalHoras(servidorId: number | undefined): number {
@@ -211,7 +221,6 @@ export class EscalaMensalComponent implements OnInit {
     });
   }
 
-  // === MUDANÇA 5: O getTurno agora lê do MAPA, não da lista ===
   getTurno(servidor: any, dia: number): string {
     // CORREÇÃO: Se o servidor não tiver ID (por algum erro de carga), retorna vazio
     if (!servidor.id) return '';
@@ -231,8 +240,8 @@ export class EscalaMensalComponent implements OnInit {
         return 'turno-noite';
       case 'A': 
         return 'turno-manha';
-      case 'M': 
-        return 'turno-manha';
+      case 'B': 
+        return 'turno-tarde';
       case 'F':
         return 'turno-folga';
       default:

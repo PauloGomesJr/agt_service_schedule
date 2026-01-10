@@ -130,6 +130,15 @@ th:last-child {
   border: 1px solid #d4ac0d;
 }
 
+
+/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
+.turno-tarde {
+  background-color: #53f10f;
+  color: #333333; /* Texto escuro para contraste */
+  border: 1px solid #1ed40d;
+}
+
+
 /* F - Folga (Cinza Claro/Neutro) */
 .turno-folga {
   background-color: #ecf0f1;
