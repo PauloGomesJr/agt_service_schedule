@@ -7,18 +7,29 @@ import { Servidor } from '../models/servidor.model';
   providedIn: 'root'
 })
 export class ServidorService {
-  // URL da API que criamos no Spring Boot
+  // URL da API
   private apiUrl = 'http://localhost:8081/api/servidores';
 
   constructor(private http: HttpClient) { }
 
-  // Busca a lista completa de servidores
+  // 1. Listar (GET)
   listar(): Observable<Servidor[]> {
     return this.http.get<Servidor[]>(this.apiUrl);
   }
 
-  // Envia um novo servidor para o banco
+  // 2. Cadastrar (POST)
   cadastrar(servidor: Servidor): Observable<Servidor> {
     return this.http.post<Servidor>(this.apiUrl, servidor);
+  }
+
+  // 3. Atualizar (PUT) - ADICIONADO AGORA
+  atualizar(servidor: Servidor): Observable<Servidor> {
+    // Precisamos passar o ID na URL: .../servidores/1
+    return this.http.put<Servidor>(`${this.apiUrl}/${servidor.id}`, servidor);
+  }
+
+  // 4. Excluir (DELETE) - ADICIONADO AGORA
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
