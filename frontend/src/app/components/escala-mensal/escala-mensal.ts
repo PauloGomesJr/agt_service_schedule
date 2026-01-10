@@ -68,6 +68,7 @@ export class EscalaMensalComponent implements OnInit {
   }
 
   alterarMes(delta: number) {
+    // 1. Atualiza as variáveis de controle
     this.mesAtual += delta;
 
     if (this.mesAtual > 11) {
@@ -78,19 +79,19 @@ export class EscalaMensalComponent implements OnInit {
       this.anoAtual--;
     }
 
+    // 2. Regera os dias do calendário visual (cabeçalho)
     this.gerarDiasDoMes();
     
-    // === IMPORTANTE: Recalcular o mapa para limpar os dados do mês anterior e mostrar os novos
+    // 3. O PULO DO GATO: Recalcula quais bolinhas coloridas devem aparecer
     this.atualizarMapaVisualizacao(); 
   }
-
   getDataVisualizacao(): Date {
     return new Date(this.anoAtual, this.mesAtual, 1);
   }
 
   carregarDados() {
     this.servidorService.listar().subscribe(dados => {
-      this.servidores = dados;
+      this.servidores = dados.filter(s => s.situacao === 'ATIVO');
       this.cdr.detectChanges();
     });
 
@@ -112,36 +113,32 @@ export class EscalaMensalComponent implements OnInit {
   // === MUDANÇA 3: Função Mágica que transforma Lista em Mapa ===
  // Substitua este método inteiro
   atualizarMapaVisualizacao() {
-    this.mapaEscalas = {}; // Zera o mapa visual
+    this.mapaEscalas = {}; // 1. Zera o mapa visual (Limpa a tela anterior)
 
     this.escalas.forEach(escala => {
-        // A data vem do Banco como string "YYYY-MM-DD" (Ex: "2025-01-05")
+        // A data vem do Banco como string "YYYY-MM-DD"
         const partes = escala.data.split('-'); 
         
-        const anoEscala = parseInt(partes[0]);        // 2025
-        const mesEscala = parseInt(partes[1]) - 1;    // 0 (Janeiro) -> O array do JS começa em 0, o do Java em 1
-        const dia = parseInt(partes[2]);              // 5
+        const anoEscala = parseInt(partes[0]);        
+        const mesEscala = parseInt(partes[1]) - 1;    // 0 = Janeiro
+        const dia = parseInt(partes[2]);              
 
-        // === A CORREÇÃO ESTÁ AQUI ===
-        // Só mostramos a escala se ela pertencer ao Mês e Ano que estamos vendo na tela
+        // 2. A PENEIRA: Só deixa passar se for do mês/ano que estamos olhando
         if (anoEscala === this.anoAtual && mesEscala === this.mesAtual) {
             
             const idServidor = escala.servidor.id;
             
-            // Verifica se o servidor tem ID válido
             if (idServidor) {
-                // Se ainda não tem uma "gaveta" pra esse servidor, cria uma
                 if (!this.mapaEscalas[idServidor]) {
                     this.mapaEscalas[idServidor] = {};
                 }
-
-                // Guarda o código no dia correspondente
                 this.mapaEscalas[idServidor][dia] = escala.tipoServico.codigo;
             }
         }
     });
     
-    console.log(`Mapa gerado para ${this.mesAtual + 1}/${this.anoAtual}:`, this.mapaEscalas);
+    // Debug para você conferir no console se o mês mudou
+    console.log(`Mapa reconstruído para o mês ${this.mesAtual + 1}/${this.anoAtual}`);
   }
 
   calcularTotalHoras(servidorId: number | undefined): number {

@@ -28,10 +28,10 @@
       <tbody>
         @for (servidor of servidores; track servidor.id) {
           <tr>
-            <td style="position: sticky; left: 0; background-color: white; font-weight: bold; text-align: left; padding-left: 10px;">
-              {{ servidor.nome }}
-            </td>
-
+            <td style="white-space: nowrap; font-weight: bold; padding: 0 10px;">
+               {{ servidor.nomeGuerra ? servidor.nomeGuerra : servidor.nome.split(' ')[0] }}
+           </td>
+           
             @for (dia of diasDoMes; track dia) {
               <td (click)="abrirModal(servidor, dia)" style="text-align: center; cursor: pointer;">
   
