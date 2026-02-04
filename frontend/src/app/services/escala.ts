@@ -19,4 +19,9 @@ export class EscalaService {
   salvar(escala: EscalaDTO): Observable<Escala> {
     return this.http.post<Escala>(this.apiUrl, escala);
   }
+
+  // Adicione este método na classe EscalaService
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

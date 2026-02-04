@@ -18,6 +18,10 @@ public class Servidor implements Serializable {
     @Column(nullable = false, length = 100)
     private String nome;
 
+    // Dentro da classe Servidor.java
+    @Column(name = "nome_guerra")
+    private String nomeGuerra;
+
     // Matrícula deve ser única para evitar duplicidade de cadastro
     @Column(nullable = false, unique = true, length = 20)
     private String matricula;

@@ -15,15 +15,15 @@ import java.util.List;
 @Service
 public class EscalaDiariaService {
 
-    private final EscalaDiariaRepository escalaRepository;
+    // NOME CORRIGIDO E PADRONIZADO
+    private final EscalaDiariaRepository escalaDiariaRepository;
     private final ServidorRepository servidorRepository;
     private final TipoServicoRepository tipoServicoRepository;
 
-    // Injeção de dependência de todos os repositórios necessários
-    public EscalaDiariaService(EscalaDiariaRepository escalaRepository, 
+    public EscalaDiariaService(EscalaDiariaRepository escalaDiariaRepository, 
                                ServidorRepository servidorRepository, 
                                TipoServicoRepository tipoServicoRepository) {
-        this.escalaRepository = escalaRepository;
+        this.escalaDiariaRepository = escalaDiariaRepository;
         this.servidorRepository = servidorRepository;
         this.tipoServicoRepository = tipoServicoRepository;
     }
@@ -38,46 +38,38 @@ public class EscalaDiariaService {
         TipoServico tipoServico = tipoServicoRepository.findById(dto.getTipoServicoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de Serviço não encontrado ID: " + dto.getTipoServicoId()));
         
-        // === LINHA NOVA AQUI ===
+        // Validação de Conflito
         validarConflitoHorarios(servidor, dto.getData(), tipoServico);
-        // =======================
 
         // 3. Lógica de UPSERT (Update or Insert)
-        // Tenta achar uma escala existente para esse servidor nessa data
-        EscalaDiaria escala = escalaRepository.findByServidorIdAndData(dto.getServidorId(), dto.getData())
-                .orElse(new EscalaDiaria()); // Se não achar, cria uma nova em branco
+        EscalaDiaria escala = escalaDiariaRepository.findByServidorIdAndData(dto.getServidorId(), dto.getData())
+                .orElse(new EscalaDiaria()); 
 
-        // Atualiza os dados (seja nova ou antiga)
+        // Atualiza os dados
         escala.setData(dto.getData());
         escala.setServidor(servidor);
         escala.setTipoServico(tipoServico);
         escala.setObservacao(dto.getObservacao());
 
         // 4. Salvar
-        return escalaRepository.save(escala);
+        return escalaDiariaRepository.save(escala);
     }
     
     public List<EscalaDiaria> listarTodas() {
-        return escalaRepository.findAll();
+        return escalaDiariaRepository.findAll();
     }
 
     private void validarConflitoHorarios(Servidor servidor, java.time.LocalDate dataAtual, TipoServico novoServico) {
-        // Verifica o dia ANTERIOR
         java.time.LocalDate dataOntem = dataAtual.minusDays(1);
         
-        escalaRepository.findByServidorIdAndData(servidor.getId(), dataOntem).ifPresent(escalaOntem -> {
+        // Uso correto da variável escalaDiariaRepository
+        escalaDiariaRepository.findByServidorIdAndData(servidor.getId(), dataOntem).ifPresent(escalaOntem -> {
             TipoServico servicoOntem = escalaOntem.getTipoServico();
             
-            // Se o serviço de ontem vira a noite
             if (servicoOntem.cruzaMeiaNoite()) {
-                // Ele termina HOJE neste horário:
                 java.time.LocalTime terminoOntemHoje = servicoOntem.getHoraFim();
                 java.time.LocalTime inicioNovo = novoServico.getHoraInicio();
 
-                System.out.println("Validando: Ontem acaba às " + terminoOntemHoje + " | Hoje começa às " + inicioNovo);
-
-                // CORREÇÃO: Usamos !isBefore (Não é antes) 
-                // Isso significa: É Depois OU É Igual (>=)
                 if (!terminoOntemHoje.isBefore(inicioNovo)) {
                     throw new org.springframework.web.server.ResponseStatusException(
                         org.springframework.http.HttpStatus.BAD_REQUEST, 
@@ -86,5 +78,10 @@ public class EscalaDiariaService {
                 }
             }
         });
+    }
+
+    // === AGORA FUNCIONA PORQUE O NOME BATE ===
+    public void excluir(Long id) {
+        escalaDiariaRepository.deleteById(id);
     }
 }

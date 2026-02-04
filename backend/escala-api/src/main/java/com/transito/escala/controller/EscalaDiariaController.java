@@ -14,19 +14,28 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EscalaDiariaController {
 
-    private final EscalaDiariaService service;
+    // NOME CORRIGIDO E PADRONIZADO
+    private final EscalaDiariaService escalaDiariaService;
 
-    public EscalaDiariaController(EscalaDiariaService service) {
-        this.service = service;
+    public EscalaDiariaController(EscalaDiariaService escalaDiariaService) {
+        this.escalaDiariaService = escalaDiariaService;
     }
 
     @PostMapping
     public ResponseEntity<EscalaDiaria> criar(@RequestBody EscalaDiariaDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(dto));
+        // Uso correto da variável
+        return ResponseEntity.status(HttpStatus.CREATED).body(escalaDiariaService.salvar(dto));
     }
 
     @GetMapping
     public ResponseEntity<List<EscalaDiaria>> listar() {
-        return ResponseEntity.ok(service.listarTodas());
+        return ResponseEntity.ok(escalaDiariaService.listarTodas());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        // Uso correto da variável
+        escalaDiariaService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

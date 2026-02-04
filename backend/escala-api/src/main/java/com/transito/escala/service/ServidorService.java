@@ -29,9 +29,14 @@ public class ServidorService {
     public List<Servidor> listarTodos() {
         return servidorRepository.findAll();
     }
-    
+
     public Servidor buscarPorId(Long id) {
         return servidorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Servidor não encontrado"));
+    }
+
+    // === ADICIONE ESTE MÉTODO ===
+    public void excluir(Long id) {
+        servidorRepository.deleteById(id);
     }
 }

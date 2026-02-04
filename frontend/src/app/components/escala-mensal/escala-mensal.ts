@@ -28,8 +28,7 @@ export class EscalaMensalComponent implements OnInit {
   // Lista original (para cálculos e lógica)
   escalas: Escala[] = []; 
   
-  // === MUDANÇA 1: Novo Objeto para Visualização Rápida ===
-  // Vai guardar: { 10: { 1: 'A', 2: 'F' }, 11: { ... } }
+  // Mapa visual: { idServidor: { dia: 'A', dia2: 'F' } }
   mapaEscalas: any = {}; 
 
   dataReferencia = new Date(); 
@@ -40,6 +39,7 @@ export class EscalaMensalComponent implements OnInit {
   modalAberto = false;
   
   escalaSelecionada: any = {
+    id: null, // <--- CAMPO NOVO: Para saber qual excluir
     servidorId: null,
     nomeServidor: '',
     data: null, 
@@ -68,7 +68,6 @@ export class EscalaMensalComponent implements OnInit {
   }
 
   alterarMes(delta: number) {
-    // 1. Atualiza as variáveis de controle
     this.mesAtual += delta;
 
     if (this.mesAtual > 11) {
@@ -79,12 +78,10 @@ export class EscalaMensalComponent implements OnInit {
       this.anoAtual--;
     }
 
-    // 2. Regera os dias do calendário visual (cabeçalho)
     this.gerarDiasDoMes();
-    
-    // 3. O PULO DO GATO: Recalcula quais bolinhas coloridas devem aparecer
-    this.atualizarMapaVisualizacao(); 
+    this.atualizarMapaVisualizacao(); // Recalcula o mapa para o novo mês
   }
+
   getDataVisualizacao(): Date {
     return new Date(this.anoAtual, this.mesAtual, 1);
   }
@@ -101,29 +98,22 @@ export class EscalaMensalComponent implements OnInit {
     });
 
     this.escalaService.listar().subscribe(dados => {
-      this.escalas = dados; // Guarda a lista original
-      
-      // === MUDANÇA 2: Processar a lista para o formato de Mapa ===
+      this.escalas = dados;
       this.atualizarMapaVisualizacao();
-
       this.cdr.detectChanges();
     });
   }
 
-  // === MUDANÇA 3: Função Mágica que transforma Lista em Mapa ===
- // Substitua este método inteiro
   atualizarMapaVisualizacao() {
-    this.mapaEscalas = {}; // 1. Zera o mapa visual (Limpa a tela anterior)
+    this.mapaEscalas = {}; 
 
     this.escalas.forEach(escala => {
-        // A data vem do Banco como string "YYYY-MM-DD"
         const partes = escala.data.split('-'); 
         
         const anoEscala = parseInt(partes[0]);        
-        const mesEscala = parseInt(partes[1]) - 1;    // 0 = Janeiro
+        const mesEscala = parseInt(partes[1]) - 1;    
         const dia = parseInt(partes[2]);              
 
-        // 2. A PENEIRA: Só deixa passar se for do mês/ano que estamos olhando
         if (anoEscala === this.anoAtual && mesEscala === this.mesAtual) {
             
             const idServidor = escala.servidor.id;
@@ -136,8 +126,6 @@ export class EscalaMensalComponent implements OnInit {
             }
         }
     });
-    
-    // Debug para você conferir no console se o mês mudou
     console.log(`Mapa reconstruído para o mês ${this.mesAtual + 1}/${this.anoAtual}`);
   }
 
@@ -154,7 +142,9 @@ export class EscalaMensalComponent implements OnInit {
   }
 
   abrirModal(servidor: Servidor, data: Date) {
+    // Reseta o objeto, inclusive o ID
     this.escalaSelecionada = {
+      id: null,
       servidorId: servidor.id,
       nomeServidor: servidor.nome,
       data: data,
@@ -166,7 +156,9 @@ export class EscalaMensalComponent implements OnInit {
       e.servidor.id === servidor.id && e.data === dataStr
     );
     
+    // Se achou escala, preenche o ID para permitir edição/exclusão
     if (escalaExistente) {
+      this.escalaSelecionada.id = escalaExistente.id; // <--- PEGA O ID AQUI
       this.escalaSelecionada.tipoServicoId = escalaExistente.tipoServico.id;
     }
     this.modalAberto = true;
@@ -193,15 +185,13 @@ export class EscalaMensalComponent implements OnInit {
 
     this.escalaService.salvar(dto).subscribe({
       next: (novaEscala) => {
-        // Atualiza a LISTA
+        // Atualiza a LISTA (Remove antigo se houver e põe o novo)
         this.escalas = this.escalas.filter(e => 
           !(e.servidor.id === novaEscala.servidor.id && e.data === novaEscala.data)
         );
         this.escalas.push(novaEscala);
         
-        // === MUDANÇA 4: Atualiza o MAPA visual ===
         this.atualizarMapaVisualizacao();
-
         this.cdr.detectChanges(); 
         this.fecharModal();
       },
@@ -218,11 +208,38 @@ export class EscalaMensalComponent implements OnInit {
     });
   }
 
-  getTurno(servidor: any, dia: number): string {
-    // CORREÇÃO: Se o servidor não tiver ID (por algum erro de carga), retorna vazio
-    if (!servidor.id) return '';
+  // === NOVO MÉTODO: EXCLUIR ===
+  excluirEscala() {
+    // Só exclui se tiver ID
+    if (!this.escalaSelecionada.id) return;
 
-    // Agora é seguro acessar
+    if (confirm('Tem certeza que deseja remover esta escala?')) {
+      this.escalaService.excluir(this.escalaSelecionada.id).subscribe({
+        next: () => {
+          // 1. Remove da lista local (memória)
+          this.escalas = this.escalas.filter(e => e.id !== this.escalaSelecionada.id);
+          
+          // === A CORREÇÃO ESTÁ AQUI ===
+          // PRIMEIRO: Fecha o modal (Define modalAberto = false)
+          this.fecharModal(); 
+
+          // SEGUNDO: Atualiza o visual (tira a cor da célula)
+          this.atualizarMapaVisualizacao();
+
+          // TERCEIRO: Manda o Angular aplicar as mudanças na tela
+          // Como a variável modalAberto já é false, ele vai remover o modal da tela agora.
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Erro ao excluir escala.');
+        }
+      });
+    }
+  }
+
+  getTurno(servidor: any, dia: number): string {
+    if (!servidor.id) return '';
     if (this.mapaEscalas && this.mapaEscalas[servidor.id]) {
         return this.mapaEscalas[servidor.id][dia] || '';
     }
@@ -231,19 +248,12 @@ export class EscalaMensalComponent implements OnInit {
 
   obterClasseTurno(codigo: string | undefined): string {
     if (!codigo) return ''; 
-
     switch (codigo.toUpperCase()) {
-      case 'C':
-        return 'turno-noite';
-      case 'A': 
-        return 'turno-manha';
-      case 'B': 
-        return 'turno-tarde';
-      case 'F':
-        return 'turno-folga';
-      default:
-        return 'turno-padrao'; 
+      case 'C': return 'turno-noite';
+      case 'A': return 'turno-manha';
+      case 'B': return 'turno-tarde';
+      case 'F': return 'turno-folga';
+      default:  return 'turno-padrao'; 
     }
   }
-
 }

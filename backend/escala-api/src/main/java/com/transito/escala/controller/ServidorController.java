@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/servidores") // URL base
-@CrossOrigin(origins = "*") // Permite que o Angular (em outra porta) acesse a API
+@RequestMapping("/api/servidores")
+@CrossOrigin(origins = "*")
 public class ServidorController {
 
     private final ServidorService servidorService;
@@ -19,14 +19,42 @@ public class ServidorController {
         this.servidorService = servidorService;
     }
 
+    // 1. CRIAR
     @PostMapping
     public ResponseEntity<Servidor> criar(@RequestBody Servidor servidor) {
         Servidor novoServidor = servidorService.salvar(servidor);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoServidor);
     }
 
+    // 2. LISTAR
     @GetMapping
     public ResponseEntity<List<Servidor>> listar() {
         return ResponseEntity.ok(servidorService.listarTodos());
+    }
+
+    // 3. EDITAR (AQUI ESTAVA FALTANDO!)
+    @PutMapping("/{id}")
+    public ResponseEntity<Servidor> atualizar(@PathVariable Long id, @RequestBody Servidor servidorAtualizado) {
+        // Busca o servidor antigo no banco
+        Servidor servidorExistente = servidorService.buscarPorId(id);
+        
+        // Atualiza os dados (IMPORTANTE: Copiar o Nome de Guerra)
+        servidorExistente.setNome(servidorAtualizado.getNome());
+        servidorExistente.setNomeGuerra(servidorAtualizado.getNomeGuerra()); // <--- O PULO DO GATO 🐱
+        servidorExistente.setMatricula(servidorAtualizado.getMatricula());
+        servidorExistente.setEmail(servidorAtualizado.getEmail());
+        servidorExistente.setSituacao(servidorAtualizado.getSituacao());
+
+        // Salva as alterações
+        Servidor servidorSalvo = servidorService.salvar(servidorExistente);
+        
+        return ResponseEntity.ok(servidorSalvo);
+    }
+
+    // 4. EXCLUIR (TAMBÉM FALTAVA)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        servidorService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

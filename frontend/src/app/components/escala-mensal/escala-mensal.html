@@ -8,7 +8,8 @@
   </div>
 
 
-  <div style="overflow-x: auto;"> <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+  <div style="overflow-x: auto;"> 
+    <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
       
       <thead>
         <tr style="background-color: #eee;">
@@ -28,11 +29,11 @@
       <tbody>
         @for (servidor of servidores; track servidor.id) {
           <tr>
-            <td style="white-space: nowrap; font-weight: bold; padding: 0 10px;">
+            <td style="white-space: nowrap; font-weight: bold; padding: 0 10px; text-align: left;">
                {{ servidor.nomeGuerra ? servidor.nomeGuerra : servidor.nome.split(' ')[0] }}
-           </td>
-           
-            @for (dia of diasDoMes; track dia) {
+            </td>
+            
+             @for (dia of diasDoMes; track dia) {
               <td (click)="abrirModal(servidor, dia)" style="text-align: center; cursor: pointer;">
   
                 <span class="turno-badge" 
@@ -46,7 +47,7 @@
             }
             <td style="font-weight: bold; background-color: #ecf0f1; position: sticky; right: 0; text-align: center;">
             {{ calcularTotalHoras(servidor.id) }}h
-           </td>
+            </td>
           </tr>
         }
       </tbody>
@@ -59,7 +60,7 @@
 <div class="modal-backdrop">
   
   <div class="modal-content">
-    <h3>Editar Escala</h3>
+    <h3>{{ escalaSelecionada.id ? 'Editar Escala' : 'Nova Escala' }}</h3>
     
     <p>
       <strong>Servidor:</strong> {{ escalaSelecionada.nomeServidor }} <br>
@@ -78,9 +79,22 @@
       </select>
     </div>
 
-    <div class="modal-actions">
-      <button (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
-      <button (click)="salvarEscala()" class="btn-salvar">Salvar</button>
+    <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+      
+      <div>
+        @if (escalaSelecionada.id) {
+          <button (click)="excluirEscala()" 
+                  style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+            Excluir
+          </button>
+        }
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
+        <button (click)="salvarEscala()" class="btn-salvar">Salvar</button>
+      </div>
+
     </div>
   </div>
 
