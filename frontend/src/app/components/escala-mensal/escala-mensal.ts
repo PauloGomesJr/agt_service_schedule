@@ -12,6 +12,10 @@ import { Servidor } from '../../models/servidor.model';
 import { TipoServico } from '../../models/tipo-servico.model';
 import { Escala, EscalaDTO } from '../../models/escala.model';
 
+// === IMPORTAÇÕES NOVAS PARA O PDF ===
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 @Component({
   selector: 'app-escala-mensal',
   standalone: true,
@@ -238,6 +242,56 @@ export class EscalaMensalComponent implements OnInit {
     }
   }
 
+// === NOVO MÉTODO: GERAR PDF ===
+  gerarPDF() {
+    // 1. Cria o documento PDF
+    // 'l' = landscape (paisagem), 'mm' = milímetros, 'a4' = tamanho do papel
+    const doc = new jsPDF('l', 'mm', 'a4');
+
+    // 2. Título do Documento
+    const mesFormatado = this.getDataVisualizacao().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    doc.setFontSize(18);
+    doc.text(`Escala de Serviço - ${mesFormatado.toUpperCase()}`, 15, 15);
+
+    // 3. Gera a tabela a partir do HTML
+    autoTable(doc, {
+      html: '#tabela-escala', // Vamos adicionar esse ID no HTML agora!
+      startY: 25,             // Começa um pouco abaixo do título
+      theme: 'grid',          // Estilo de grade (linhas pretas)
+      styles: {
+        fontSize: 7,          // Fonte pequena para caber os 31 dias
+        cellPadding: 1,       // Pouco espaço interno para economizar papel
+        halign: 'center',     // Centraliza o texto
+        valign: 'middle'      // Centraliza verticalmente
+      },
+      headStyles: {
+        fillColor: [52, 73, 94], // Cor do cabeçalho (Azul Escuro)
+        textColor: 255           // Texto branco
+      },
+      // Pinta as células de acordo com o texto (A, B, C, F)
+      didParseCell: (data) => {
+        //const texto = data.cell.raw as string; // Pega o conteúdo(html inteiro) da célula
+        const texto = data.cell.text.join(''); // Pega o conteúdo(texto) da célula
+        // Se for célula de corpo (não cabeçalho)
+        if (data.section === 'body' && data.column.index > 0) { // Ignora coluna 0 (Nome)
+            if (texto.includes('F')) {
+                data.cell.styles.fillColor = [255, 235, 59]; // Amarelo (Férias/Folga)
+            } else if (texto.includes('C')) {
+                data.cell.styles.fillColor = [41, 128, 185]; // Azul (Noite)
+                data.cell.styles.textColor = 255;
+            } else if (texto.includes('A')) {
+                data.cell.styles.fillColor = [46, 204, 113]; // Verde (Manhã)
+            }
+        }
+      }
+    });
+
+    // 4. Salva o arquivo
+    doc.save(`Escala_${mesFormatado}.pdf`);
+  }
+
+
+
   getTurno(servidor: any, dia: number): string {
     if (!servidor.id) return '';
     if (this.mapaEscalas && this.mapaEscalas[servidor.id]) {
@@ -253,6 +307,7 @@ export class EscalaMensalComponent implements OnInit {
       case 'A': return 'turno-manha';
       case 'B': return 'turno-tarde';
       case 'F': return 'turno-folga';
+      case 'W': return 'turno-noite';
       default:  return 'turno-padrao'; 
     }
   }
