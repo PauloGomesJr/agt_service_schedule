@@ -41,7 +41,8 @@ export class EscalaMensalComponent implements OnInit {
   diasDoMes: Date[] = [];
 
   modalAberto = false;
-  
+  dataInicioSemana: string = '';
+
   escalaSelecionada: any = {
     id: null, // <--- CAMPO NOVO: Para saber qual excluir
     servidorId: null,
@@ -242,7 +243,7 @@ export class EscalaMensalComponent implements OnInit {
     }
   }
 
-// === NOVO MÉTODO: GERAR PDF ===
+  // === NOVO MÉTODO: GERAR PDF ===
   gerarPDF() {
     // 1. Cria o documento PDF
     // 'l' = landscape (paisagem), 'mm' = milímetros, 'a4' = tamanho do papel
@@ -290,8 +291,108 @@ export class EscalaMensalComponent implements OnInit {
     doc.save(`Escala_${mesFormatado}.pdf`);
   }
 
+  // === NOVO MÉTODO: RELATÓRIO SEMANAL CUSTOMIZADO ===
+  gerarPDFSemanal() {
+    // 1. Verifica se o usuário escolheu uma data
+    if (!this.dataInicioSemana) {
+        alert('Por favor, escolha uma data de início no calendário ao lado do botão.');
+        return;
+    }
 
+    // 2. Converte a data string (YYYY-MM-DD) para Objeto Date de forma segura (sem bugar o fuso horário)
+    const partes = this.dataInicioSemana.split('-');
+    const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
 
+    // 3. Avisa se não for sábado, mas permite continuar se o usuário quiser
+    if (dataInicio.getDay() !== 6) { // 6 = Sábado
+        const confirma = confirm('A data escolhida não é um Sábado. Deseja gerar os 7 dias a partir deste dia mesmo assim?');
+        if (!confirma) return;
+    }
+
+    const doc = new jsPDF('p', 'mm', 'a4');
+    
+    // 4. Monta o array com os 7 dias consecutivos
+    const diasDaSemana: Date[] = [];
+    for (let j = 0; j < 7; j++) {
+        const dia = new Date(dataInicio);
+        dia.setDate(dataInicio.getDate() + j);
+        diasDaSemana.push(dia);
+    }
+
+    // Textos para o título
+    const inicioStr = diasDaSemana[0].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const fimStr = diasDaSemana[6].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    
+    doc.setFontSize(14);
+    doc.text(`Escala Semanal: ${inicioStr} a ${fimStr}`, 105, 20, { align: 'center' });
+
+    // 5. Cabeçalho da Tabela
+    const headRow = ['Servidor', ...diasDaSemana.map(d => 
+        `${d.getDate()}/${(d.getMonth()+1).toString().padStart(2,'0')} (${d.toLocaleDateString('pt-BR', { weekday: 'short' }).slice(0,3)})`
+    )];
+
+    // 6. Corpo da Tabela
+    const bodyRows = this.servidores.map(servidor => {
+        const nomeExibicao = servidor.nomeGuerra || servidor.nome.split(' ')[0];
+        
+        const turnosSemana = diasDaSemana.map(dia => {
+            // O PULO DO GATO: Busca direto no array original de escalas ("this.escalas").
+            // Isso permite que a semana comece em Fevereiro e termine em Março sem perder dados.
+            const dataFormatada = dia.toLocaleDateString('en-CA'); // Fica "YYYY-MM-DD"
+            const escalaEncontrada = this.escalas.find(e => e.servidor.id === servidor.id && e.data === dataFormatada);
+            
+            return escalaEncontrada ? escalaEncontrada.tipoServico.codigo : '';
+        });
+
+        return [nomeExibicao, ...turnosSemana];
+    });
+
+    // 7. Desenha a Tabela
+    autoTable(doc, {
+        startY: 30,
+        head: [headRow],
+        body: bodyRows,
+        theme: 'grid',
+        styles: {
+            fontSize: 9,
+            cellPadding: 3,
+            halign: 'center',
+            valign: 'middle'
+        },
+        headStyles: {
+            fillColor: [44, 62, 80],
+            textColor: 255,
+            fontStyle: 'bold'
+        },
+        columnStyles: {
+            0: { halign: 'left', fontStyle: 'bold', cellWidth: 40 }
+        },
+        didParseCell: (data) => {
+            if (data.section === 'body' && data.column.index > 0) {
+                let texto = '';
+                if (data.cell && data.cell.text) {
+                    texto = Array.isArray(data.cell.text) ? data.cell.text.join('') : String(data.cell.text);
+                }
+                
+                if (texto.includes('F')) {
+                    data.cell.styles.fillColor = [255, 235, 59];
+                } else if (texto.includes('C') || texto.includes('W')) {
+                    data.cell.styles.fillColor = [41, 128, 185];
+                    data.cell.styles.textColor = 255;
+                } else if (texto.includes('A')) {
+                    data.cell.styles.fillColor = [46, 204, 113];
+                } else if (texto.includes('B')) {
+                    data.cell.styles.fillColor = [230, 126, 34];
+                }
+            }
+        }
+    });
+
+    // 8. Salva o PDF com nome limpo
+    const nomeArquivo = `Escala_Semanal_${inicioStr.replace(/\//g, '-')}.pdf`;
+    doc.save(nomeArquivo);
+  }
+  
   getTurno(servidor: any, dia: number): string {
     if (!servidor.id) return '';
     if (this.mapaEscalas && this.mapaEscalas[servidor.id]) {
