@@ -84,4 +84,32 @@ public class EscalaDiariaService {
     public void excluir(Long id) {
         escalaDiariaRepository.deleteById(id);
     }
+
+    // Adicione este método dentro de EscalaDiariaService.java
+
+    @Transactional
+    public void permutar(Long idOrigem, Long idDestino) {
+        // 1. Busca as duas escalas no banco
+        EscalaDiaria escala1 = escalaDiariaRepository.findById(idOrigem)
+                .orElseThrow(() -> new IllegalArgumentException("Plantão de origem não encontrado."));
+                
+        EscalaDiaria escala2 = escalaDiariaRepository.findById(idDestino)
+                .orElseThrow(() -> new IllegalArgumentException("Plantão de destino não encontrado."));
+
+        // 2. Guarda quem é quem
+        Servidor servidor1 = escala1.getServidor();
+        Servidor servidor2 = escala2.getServidor();
+
+        // (Opcional: Aqui poderíamos chamar o validarConflitoHorarios para ambos, 
+        // mas vamos garantir a troca simples primeiro)
+
+        // 3. Inverte os donos
+        escala1.setServidor(servidor2);
+        escala2.setServidor(servidor1);
+
+        // 4. Salva no banco
+        escalaDiariaRepository.save(escala1);
+        escalaDiariaRepository.save(escala2);
+    }
+
 }

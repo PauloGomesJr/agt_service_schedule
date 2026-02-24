@@ -38,4 +38,11 @@ public class EscalaDiariaController {
         escalaDiariaService.excluir(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Mapeia para a URL /api/escalas/permutar
+    @PostMapping("/permutar")
+    public ResponseEntity<Void> permutar(@RequestBody com.transito.escala.dto.PermutaDTO dto) {
+        escalaDiariaService.permutar(dto.getEscalaOrigemId(), dto.getEscalaDestinoId());
+        return ResponseEntity.ok().build();
+    }
 }

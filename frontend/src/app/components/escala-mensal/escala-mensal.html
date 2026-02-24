@@ -6,17 +6,27 @@
     
     <button (click)="alterarMes(1)" class="btn-nav">Próximo ❯</button>
     
-    <input type="date" [(ngModel)]="dataInicioSemana" class="form-control" style="width: auto; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" title="Escolha o Sábado de início">
-    
     <button (click)="gerarPDF()" class="btn btn-dark" style="background-color: #2c3e50; color: white; padding: 10px 20px; border-radius: 5px;">
         🖨️ PDF
     </button>
+
+    <input type="date" [(ngModel)]="dataInicioSemana" class="form-control" style="width: auto; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" title="Escolha o Sábado de início">
 
     <button (click)="gerarPDFSemanal()" class="btn btn-primary" style="background-color: #8e44ad; color: white; padding: 10px 20px; border-radius: 5px; border: none;">
             📄 PDF Semanal (Sáb-Sex)
         </button>
   </div>
 
+@if (modoPermuta) {
+    <div style="background-color: #f39c12; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
+      <span>
+        🔄 MODO PERMUTA: Você selecionou o plantão de {{ escalaOrigemPermuta.nomeServidor }} ({{ escalaOrigemPermuta.data | date:'dd/MM/yyyy' }}). Agora, clique no plantão de destino para trocar.
+      </span>
+      <button (click)="cancelarPermuta()" style="background-color: white; color: #f39c12; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-weight: bold;">
+        Cancelar
+      </button>
+    </div>
+  }
 
   <div style="overflow-x: auto;"> 
     <table id="tabela-escala" border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
@@ -89,23 +99,29 @@
       </select>
     </div>
 
-    <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+   <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
       
-      <div>
+      <div style="display: flex; gap: 10px;">
         @if (escalaSelecionada.id) {
-          <button (click)="excluirEscala()" 
+          <button type="button" (click)="excluirEscala()" 
                   style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
             Excluir
+          </button>
+
+          <button type="button" (click)="iniciarPermuta()" 
+                  style="background-color: #3498db; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+            🔄 Permutar
           </button>
         }
       </div>
 
       <div style="display: flex; gap: 10px;">
-        <button (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
-        <button (click)="salvarEscala()" class="btn-salvar">Salvar</button>
+        <button type="button" (click)="fecharModal()" class="btn-cancelar">Cancelar</button>
+        <button type="button" (click)="salvarEscala()" class="btn-salvar">Salvar</button>
       </div>
 
     </div>
+    
   </div>
 
 </div>

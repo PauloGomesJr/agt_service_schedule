@@ -24,4 +24,14 @@ export class EscalaService {
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Adicione este método na classe EscalaService
+  permutar(origemId: number, destinoId: number): Observable<void> {
+    const dto = {
+      escalaOrigemId: origemId,
+      escalaDestinoId: destinoId
+    };
+    return this.http.post<void>(`${this.apiUrl}/permutar`, dto);
+  }
+
 }

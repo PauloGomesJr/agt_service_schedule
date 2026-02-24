@@ -41,6 +41,10 @@ export class EscalaMensalComponent implements OnInit {
   diasDoMes: Date[] = [];
 
   modalAberto = false;
+  
+  // === VARIÁVEIS DA PERMUTA ===
+  modoPermuta = false;
+  escalaOrigemPermuta: any = null;
   dataInicioSemana: string = '';
 
   escalaSelecionada: any = {
@@ -146,8 +150,30 @@ export class EscalaMensalComponent implements OnInit {
     return escalasDoMes.reduce((total, escala) => total + escala.tipoServico.horasTotais, 0);
   }
 
-  abrirModal(servidor: Servidor, data: Date) {
-    // Reseta o objeto, inclusive o ID
+ abrirModal(servidor: Servidor, data: Date) {
+    const dataStr = data.toISOString().split('T')[0];
+    const escalaExistente = this.escalas.find(e => 
+      e.servidor.id === servidor.id && e.data === dataStr
+    );
+
+    // === INTERCEPTADOR DE PERMUTA ===
+    // Se o botão permutar foi clicado antes, o próximo clique cai aqui!
+    if (this.modoPermuta) {
+      if (!escalaExistente) {
+        alert('Para permutar, clique em um plantão que já tenha sido marcado (célula colorida).');
+        return;
+      }
+      if (escalaExistente.id === this.escalaOrigemPermuta.id) {
+        alert('Você não pode permutar um plantão com ele mesmo.');
+        return;
+      }
+      
+      // Executa a troca
+      this.executarPermuta(escalaExistente.id, servidor.nomeGuerra || servidor.nome.split(' ')[0], data);
+      return; // Para a execução aqui, não abre o modal normal.
+    }
+
+    // === FLUXO NORMAL (Se não estiver em permuta, abre o modal) ===
     this.escalaSelecionada = {
       id: null,
       servidorId: servidor.id,
@@ -155,15 +181,9 @@ export class EscalaMensalComponent implements OnInit {
       data: data,
       tipoServicoId: null 
     };
-
-    const dataStr = data.toISOString().split('T')[0];
-    const escalaExistente = this.escalas.find(e => 
-      e.servidor.id === servidor.id && e.data === dataStr
-    );
     
-    // Se achou escala, preenche o ID para permitir edição/exclusão
     if (escalaExistente) {
-      this.escalaSelecionada.id = escalaExistente.id; // <--- PEGA O ID AQUI
+      this.escalaSelecionada.id = escalaExistente.id; 
       this.escalaSelecionada.tipoServicoId = escalaExistente.tipoServico.id;
     }
     this.modalAberto = true;
@@ -238,6 +258,60 @@ export class EscalaMensalComponent implements OnInit {
         error: (err) => {
           console.error(err);
           alert('Erro ao excluir escala.');
+        }
+      });
+    }
+  }
+
+  // === MÉTODOS DE PERMUTA ===
+  iniciarPermuta() {
+    this.modoPermuta = true;
+    // Guarda os dados de quem vai ceder o plantão
+    this.escalaOrigemPermuta = { ...this.escalaSelecionada };
+    this.fecharModal(); // Fecha o modal para o usuário poder clicar no destino
+  }
+
+  cancelarPermuta() {
+    this.modoPermuta = false;
+    this.escalaOrigemPermuta = null;
+  }
+
+  executarPermuta(destinoId: number, nomeDestino: string, dataDestino: Date) {
+    const dataOrigemStr = this.escalaOrigemPermuta.data.toLocaleDateString('pt-BR');
+    const dataDestStr = dataDestino.toLocaleDateString('pt-BR');
+
+    const msg = `Confirma a TROCA DE PLANTÕES?\n\nSAI: ${this.escalaOrigemPermuta.nomeServidor} (${dataOrigemStr})\nENTRA: ${nomeDestino} (${dataDestStr})`;
+
+    if (confirm(msg)) {
+      this.escalaService.permutar(this.escalaOrigemPermuta.id, destinoId).subscribe({
+        next: () => {
+          // Atualiza as listas locais para refletir a troca sem precisar recarregar a página
+          const esc1 = this.escalas.find(e => e.id === this.escalaOrigemPermuta.id);
+          const esc2 = this.escalas.find(e => e.id === destinoId);
+          
+          if (esc1 && esc2) {
+              const tempServidor = esc1.servidor;
+              esc1.servidor = esc2.servidor;
+              esc2.servidor = tempServidor;
+          }
+
+          this.cancelarPermuta();
+          this.atualizarMapaVisualizacao();
+          this.cdr.detectChanges();
+          alert('Permuta realizada com sucesso!');
+        },
+        error: (err) => {
+          console.error('Erro detalhado:', err);
+          let mensagem = 'Erro interno ao realizar permuta.';
+          
+          if (err && err.error && err.error.message) {
+               mensagem = err.error.message;
+          } else if (err && err.error && typeof err.error === 'string') {
+               mensagem = err.error;
+          }
+          
+          alert('⚠️ Permuta Recusada:\n' + mensagem);
+          this.cancelarPermuta(); // Tira o modo amarelo se der erro
         }
       });
     }
@@ -404,9 +478,9 @@ export class EscalaMensalComponent implements OnInit {
   obterClasseTurno(codigo: string | undefined): string {
     if (!codigo) return ''; 
     switch (codigo.toUpperCase()) {
-      case 'C': return 'turno-noite';
       case 'A': return 'turno-manha';
       case 'B': return 'turno-tarde';
+      case 'C': return 'turno-noite';
       case 'F': return 'turno-folga';
       case 'W': return 'turno-noite';
       default:  return 'turno-padrao'; 

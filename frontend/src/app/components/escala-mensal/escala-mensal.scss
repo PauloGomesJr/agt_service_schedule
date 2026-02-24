@@ -125,30 +125,32 @@ th:last-child {
 
 /* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
 .turno-manha {
-  background-color: #f1c40f;
-  color: #333333; /* Texto escuro para contraste */
-  border: 1px solid #d4ac0d;
-}
-
-
-/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
-.turno-tarde {
   background-color: #53f10f;
   color: #333333; /* Texto escuro para contraste */
   border: 1px solid #1ed40d;
 }
 
 
+/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
+.turno-tarde {
+ background-color: #f1c40f;
+  color: #333333; /* Texto escuro para contraste */
+  border: 1px solid #d4ac0d;
+
+}
+
+
 /* F - Folga (Cinza Claro/Neutro) */
 .turno-folga {
-  background-color: #ecf0f1;
-  color: #7f8c8d;
-  border: 1px solid #bdc3c7;
+  background-color: #ffffff;
+  color: #fc0303;
+  border: 1px solid  #333;
 }
 
 /* Padrão (para turnos novos ou desconhecidos) */
 .turno-padrao {
-  background-color: #ffffff;
+  background-color: #ecf0f1;
   color: #333;
-  border: 1px solid #ccc;
+  border: 1px solid #bdc3c7;
+
 }
