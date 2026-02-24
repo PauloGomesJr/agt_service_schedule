@@ -87,7 +87,7 @@ public class EscalaDiariaService {
 
     // Adicione este método dentro de EscalaDiariaService.java
 
-    @Transactional
+   @Transactional
     public void permutar(Long idOrigem, Long idDestino) {
         // 1. Busca as duas escalas no banco
         EscalaDiaria escala1 = escalaDiariaRepository.findById(idOrigem)
@@ -96,14 +96,24 @@ public class EscalaDiariaService {
         EscalaDiaria escala2 = escalaDiariaRepository.findById(idDestino)
                 .orElseThrow(() -> new IllegalArgumentException("Plantão de destino não encontrado."));
 
-        // 2. Guarda quem é quem
         Servidor servidor1 = escala1.getServidor();
         Servidor servidor2 = escala2.getServidor();
 
-        // (Opcional: Aqui poderíamos chamar o validarConflitoHorarios para ambos, 
-        // mas vamos garantir a troca simples primeiro)
+        // === VALIDAÇÃO 1: O Servidor 1 já trabalha no dia da Escala 2? ===
+        var conflitoS1 = escalaDiariaRepository.findByServidorIdAndData(servidor1.getId(), escala2.getData());
+        if (conflitoS1.isPresent() && !conflitoS1.get().getId().equals(escala1.getId())) {
+            String nome = servidor1.getNomeGuerra() != null ? servidor1.getNomeGuerra() : servidor1.getNome();
+            throw new IllegalArgumentException(nome + " já possui um plantão cadastrado no dia " + escala2.getData() + ".");
+        }
 
-        // 3. Inverte os donos
+        // === VALIDAÇÃO 2: O Servidor 2 já trabalha no dia da Escala 1? ===
+        var conflitoS2 = escalaDiariaRepository.findByServidorIdAndData(servidor2.getId(), escala1.getData());
+        if (conflitoS2.isPresent() && !conflitoS2.get().getId().equals(escala2.getId())) {
+            String nome = servidor2.getNomeGuerra() != null ? servidor2.getNomeGuerra() : servidor2.getNome();
+            throw new IllegalArgumentException(nome + " já possui um plantão cadastrado no dia " + escala1.getData() + ".");
+        }
+
+        // 3. Se passou pelas validações, inverte os donos!
         escala1.setServidor(servidor2);
         escala2.setServidor(servidor1);
 
