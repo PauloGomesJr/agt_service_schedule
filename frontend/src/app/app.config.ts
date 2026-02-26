@@ -1,13 +1,13 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor'; // Importe o interceptor
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient()
-    // Removemos temporariamente o 'provideZoneChangeDetection' e o 'LOCALE_ID'
-    // para recuperar o sistema.
+    // Adicionamos o withInterceptors aqui:
+    provideHttpClient(withInterceptors([authInterceptor])) 
   ]
 };

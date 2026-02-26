@@ -1,0 +1,102 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5; /* Fundo cinza bem suave */
+}
+
+.login-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  /* CONTROLE DO TAMANHO DO LOGO */
+  .logo-ammpla {
+    width: 130px; /* Tamanho ideal para ficar elegante e legível */
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    color: #0b1d3f; /* Azul escuro idêntico ao topo do brasão */
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  p {
+    color: #7f8c8d;
+    margin-top: 5px;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 15px;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: #0b1d3f; /* Borda azul ao clicar no campo */
+      outline: none;
+    }
+  }
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background-color: #0b1d3f; /* Botão no Azul Escuro da AMMPLA */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #153266; /* Azul um pouco mais claro ao passar o mouse */
+  }
+
+  &:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+  border: 1px solid #f5c6cb;
+}
