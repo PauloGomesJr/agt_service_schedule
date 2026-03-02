@@ -1,0 +1,11 @@
+<header class="top-bar">
+  <div class="logo-area">
+    <img src="/logo-ammpla.jpg" alt="Logo AMMPLA" class="mini-logo">
+    <span class="system-title">Escala Web - AMMPLA</span>
+  </div>
+
+  <div class="user-area">
+    <span class="user-greeting">👤 Olá, <strong>{{ usuario | titlecase }}</strong></span>
+    <button (click)="sair()" class="btn-logout">Sair 🚪</button>
+  </div>
+</header>

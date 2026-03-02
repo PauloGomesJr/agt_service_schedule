@@ -7,7 +7,6 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
   
-  // URL do nosso novo endpoint no Java
   private apiUrl = 'http://localhost:8081/auth';
 
   constructor(private http: HttpClient) { }
@@ -15,25 +14,29 @@ export class AuthService {
   login(credenciais: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credenciais).pipe(
       tap(resposta => {
-        // Quando o Java devolver o token, nós guardamos no cofre do navegador
         if (resposta && resposta.token) {
           localStorage.setItem('token', resposta.token);
+          // === NOVO: Salvamos também o nome de quem logou ===
+          localStorage.setItem('usuarioLogado', credenciais.login); 
         }
       })
     );
   }
 
-  // Pega a chave do cofre
   getToken(): string | null {
     return localStorage.getItem('token');
   }
-
-  // Joga a chave fora (Sair do sistema)
-  logout(): void {
-    localStorage.removeItem('token');
+  
+  // === NOVO: Retorna o nome do usuário ===
+  getUsuarioLogado(): string {
+    return localStorage.getItem('usuarioLogado') || 'Usuário';
   }
 
-  // Verifica se o usuário tem a chave
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuarioLogado'); // Limpa o nome ao sair
+  }
+
   isLoggedIn(): boolean {
     return this.getToken() !== null;
   }

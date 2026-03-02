@@ -1,0 +1,55 @@
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0b1d3f; /* Azul AMMPLA */
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .mini-logo {
+    height: 40px; /* Brasão pequeno */
+    width: auto;
+    background-color: white; /* Fundo branco pra destacar o brasão */
+    padding: 2px;
+    border-radius: 4px;
+  }
+
+  .system-title {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .user-greeting {
+    font-size: 14px;
+    color: #ecf0f1;
+  }
+
+  .btn-logout {
+    background-color: #c0392b; /* Vermelho alerta */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #a5281b;
+    }
+  }
+}

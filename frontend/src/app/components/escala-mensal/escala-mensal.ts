@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { HeaderComponent } from '../header/header';
 
 // Services
 import { ServidorService } from '../../services/servidor.service'; 
@@ -19,7 +20,7 @@ import autoTable from 'jspdf-autotable';
 @Component({
   selector: 'app-escala-mensal',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './escala-mensal.html',
   styleUrl: './escala-mensal.scss'
 })
