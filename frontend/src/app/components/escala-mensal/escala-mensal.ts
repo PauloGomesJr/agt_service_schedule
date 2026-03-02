@@ -99,6 +99,7 @@ export class EscalaMensalComponent implements OnInit {
   carregarDados() {
     this.servidorService.listar().subscribe(dados => {
       this.servidores = dados.filter(s => s.situacao === 'ATIVO');
+      this.servidores.sort((a, b) => a.nome.localeCompare(b.nome));
       this.cdr.detectChanges();
     });
 

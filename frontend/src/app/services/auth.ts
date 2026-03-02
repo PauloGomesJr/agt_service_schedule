@@ -40,4 +40,38 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.getToken() !== null;
   }
+
+// ... suas outras funções (login, logout, getUsuarioLogado) ...
+
+  // Lê o Token JWT e extrai a permissão (Role)
+  getRole(): any {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const payload = token.split('.')[1];
+        // Correção para caracteres especiais no Base64 do JWT
+        const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedPayload = JSON.parse(window.atob(base64));
+        
+        // Vamos colocar um espião no F12 para você ver como o Java manda a permissão!
+        console.log('Espião do Token JWT:', decodedPayload);
+        
+        // Pega os formatos mais comuns que o Spring Security usa
+        return decodedPayload.role || decodedPayload.authorities || decodedPayload.roles || '';
+      } catch (e) {
+        console.error('Erro ao ler token:', e);
+        return '';
+      }
+    }
+    return '';
+  }
+
+  // Atalho para saber se é chefe (Agora muito mais inteligente)
+  isAdmin(): boolean {
+    const role = this.getRole();
+    // Transforma qualquer coisa que vier do Java em texto e procura a palavra 'ADMIN'.
+    // Assim, ele aceita 'ADMIN', 'ROLE_ADMIN', ['ROLE_ADMIN'], etc.
+    return JSON.stringify(role).toUpperCase().includes('ADMIN');
+  }
+
 }

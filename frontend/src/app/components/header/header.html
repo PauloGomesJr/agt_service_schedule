@@ -6,8 +6,10 @@
 
   <nav class="main-nav">
     <a routerLink="/escala" routerLinkActive="active-link" class="nav-link">Escalas</a>
-    <a routerLink="/servidores" routerLinkActive="active-link" class="nav-link">Servidores</a>
-    <a routerLink="/config" routerLinkActive="active-link" class="nav-link">Configurações</a>
+    @if (isAdmin) {
+      <a routerLink="/servidores" routerLinkActive="active-link" class="nav-link">Servidores</a>
+      <a routerLink="/config" routerLinkActive="active-link" class="nav-link">Configurações</a>
+    }
   </nav>
 
   <div class="user-area">

@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 })
 export class HeaderComponent implements OnInit {
   usuario: string = '';
+  isAdmin: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = this.authService.getUsuarioLogado();
+    this.isAdmin = this.authService.isAdmin();
   }
 
   sair() {

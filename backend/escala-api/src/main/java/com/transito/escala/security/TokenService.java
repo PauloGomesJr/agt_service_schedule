@@ -25,6 +25,7 @@ public class TokenService {
             return JWT.create()
                     .withIssuer("escala-api") // Quem está emitindo
                     .withSubject(usuario.getLogin()) // Quem é o dono do token
+                    .withClaim("role", usuario.getRole().toString())
                     .withExpiresAt(gerarDataExpiracao()) // Quando expira
                     .sign(algorithm); // Assina com a nossa senha secreta
         } catch (JWTCreationException exception) {
