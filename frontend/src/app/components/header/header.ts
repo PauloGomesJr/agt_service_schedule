@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router'; // <-- NOVO: Importamos o RouterModule
 import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule], // <-- NOVO: Adicionamos o RouterModule aqui
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
@@ -19,12 +19,11 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Pega o nome do usuário assim que o Header carregar
     this.usuario = this.authService.getUsuarioLogado();
   }
 
   sair() {
-    this.authService.logout(); // Joga a chave fora
-    this.router.navigate(['/login']); // Manda pro login
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

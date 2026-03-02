@@ -4,6 +4,12 @@
     <span class="system-title">Escala Web - AMMPLA</span>
   </div>
 
+  <nav class="main-nav">
+    <a routerLink="/escala" routerLinkActive="active-link" class="nav-link">Escalas</a>
+    <a routerLink="/servidores" routerLinkActive="active-link" class="nav-link">Servidores</a>
+    <a routerLink="/config" routerLinkActive="active-link" class="nav-link">Configurações</a>
+  </nav>
+
   <div class="user-area">
     <span class="user-greeting">👤 Olá, <strong>{{ usuario | titlecase }}</strong></span>
     <button (click)="sair()" class="btn-logout">Sair 🚪</button>
