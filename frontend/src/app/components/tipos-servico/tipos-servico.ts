@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { HeaderComponent } from '../header/header';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +12,7 @@ import { TipoServico } from '../../models/tipo-servico.model';
 @Component({
 selector: 'app-tipos-servico',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,HeaderComponent],
   templateUrl: './tipos-servico.html',
   styles: [`
     .container { padding: 20px; max-width: 900px; margin: 0 auto; font-family: sans-serif; }

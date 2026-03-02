@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { HeaderComponent } from '../header/header';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Servidor } from '../../models/servidor.model';
@@ -7,7 +8,7 @@ import { ServidorService } from '../../services/servidor.service';
 @Component({
   selector: 'app-servidores',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './servidores.html',
   //styleUrl: './servidores.scss'
 
