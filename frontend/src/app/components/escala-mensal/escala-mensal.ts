@@ -99,7 +99,18 @@ export class EscalaMensalComponent implements OnInit {
   carregarDados() {
     this.servidorService.listar().subscribe(dados => {
       this.servidores = dados.filter(s => s.situacao === 'ATIVO');
-      this.servidores.sort((a, b) => a.nome.localeCompare(b.nome));
+      
+      // === ORDENAÇÃO PELO NOME DE GUERRA ===
+      this.servidores.sort((a, b) => {
+        // Pega o nome de guerra. Se por acaso o cadastro estiver sem nome de guerra, 
+        // ele pega o primeiro nome como plano B, garantindo que nada quebre.
+        const nomeA = (a.nomeGuerra || a.nome.split(' ')[0] || '').trim().toUpperCase();
+        const nomeB = (b.nomeGuerra || b.nome.split(' ')[0] || '').trim().toUpperCase();
+        
+        return nomeA.localeCompare(nomeB);
+      });
+      // =====================================
+
       this.cdr.detectChanges();
     });
 
