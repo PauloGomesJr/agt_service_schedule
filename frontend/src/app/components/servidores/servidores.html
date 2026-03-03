@@ -46,6 +46,20 @@
     </div>
   </div>
 
+<div style="text-align: right; margin-bottom: 10px;">
+  <label style="cursor: pointer; font-weight: normal; color: #555;">
+    <input 
+      type="checkbox" 
+      [(ngModel)]="mostrarInativos" 
+      (change)="aplicarFiltro()"
+      style="width: auto; margin-right: 8px;">
+    Mostrar servidores excluídos (Inativos)
+  </label>
+</div>
+<table class="table table-striped">
+...
+
+
   <div class="table-responsive">
     <table class="table table-striped table-hover border">
       <thead class="table-dark">
@@ -84,4 +98,3 @@
       </tbody>
     </table>
   </div>
-</div>

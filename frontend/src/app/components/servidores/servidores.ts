@@ -69,8 +69,13 @@ import { ServidorService } from '../../services/servidor.service';
 })
 export class ServidoresComponent implements OnInit {
 
-  // Lista da tabela
+// Lista que vai para a tela
   lista: Servidor[] = [];
+  
+  // === NOVAS VARIÁVEIS PARA O FILTRO ===
+  listaCompleta: Servidor[] = []; // Guarda todo mundo que vem do banco
+  mostrarInativos: boolean = false; // Controla a caixinha
+
 
   // Objeto do formulário
   cadastro: Servidor = this.criarFormularioVazio();
@@ -99,8 +104,19 @@ export class ServidoresComponent implements OnInit {
   carregar() {
     this.service.listar().subscribe({
       next: (dados) => {
-        this.lista = dados;
-        this.cdr.detectChanges(); // Força atualização da tela
+        // === ORDENAÇÃO PELO NOME OFICIAL ===
+        dados.sort((a, b) => {
+          const nomeA = (a.nome || '').trim().toUpperCase();
+          const nomeB = (b.nome || '').trim().toUpperCase();
+          return nomeA.localeCompare(nomeB);
+        });
+        // ====================================
+
+        // Guarda a lista original intocável
+        this.listaCompleta = dados;
+        
+        // Aplica o filtro para decidir quem vai aparecer na tela
+        this.aplicarFiltro();
       },
       error: (erro) => {
         console.error('Erro ao buscar servidores:', erro);
@@ -133,12 +149,28 @@ export class ServidoresComponent implements OnInit {
     this.cadastro = { ...item };
   }
 
+  aplicarFiltro() {
+    if (this.mostrarInativos) {
+      this.lista = [...this.listaCompleta]; // Mostra todo mundo
+    } else {
+      this.lista = this.listaCompleta.filter(s => s.situacao !== 'INATIVO'); // Esconde inativos
+    }
+    this.cdr.detectChanges(); // Atualiza a tela
+  }
+
   excluir(id: number | undefined) {
     if (!id) return;
     
-    if (confirm('Tem certeza que deseja excluir este servidor?')) {
-      this.service.excluir(id).subscribe(() => {
-        this.carregar(); // Recarrega a lista
+    if (confirm('Tem certeza que deseja excluir (inativar) este servidor?')) {
+      this.service.excluir(id).subscribe({
+        next: () => {
+          alert('Servidor inativado com sucesso!');
+          this.carregar(); // Recarrega a lista do banco para aplicar os filtros certinho
+        },
+        error: (erro) => {
+          console.error('Erro ao excluir:', erro);
+          alert('Erro ao tentar excluir o servidor.');
+        }
       });
     }
   }

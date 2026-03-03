@@ -6,6 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 @RestController
@@ -52,9 +55,27 @@ public class ServidorController {
     }
 
     // 4. EXCLUIR (TAMBÉM FALTAVA)
+   // @DeleteMapping("/{id}")
+    //public ResponseEntity<Void> excluir(@PathVariable Long id) {
+      //  servidorService.excluir(id);
+       // return ResponseEntity.noContent().build();
+   // }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        servidorService.excluir(id);
+        // 1. Busca o servidor usando o seu Service já existente
+        Servidor servidor = servidorService.buscarPorId(id);
+        
+        if (servidor == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 2. Muda a situação do agente (Exclusão Lógica)
+        servidor.inativar();
+        
+        // 3. Manda o Service salvar essa alteração no banco
+        servidorService.salvar(servidor);
+        
         return ResponseEntity.noContent().build();
     }
 }

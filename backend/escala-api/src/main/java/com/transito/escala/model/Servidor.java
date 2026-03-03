@@ -32,4 +32,10 @@ public class Servidor implements Serializable {
     @Enumerated(EnumType.STRING) // Salva o texto "ATIVO" no banco, não o número 0
     @Column(nullable = false)
     private SituacaoServidor situacao;
+
+   // Método para a Exclusão Lógica
+    public void inativar() {
+        // Tiramos as aspas e chamamos o Enum diretamente!
+        this.situacao = SituacaoServidor.INATIVO; 
+    }
 }
