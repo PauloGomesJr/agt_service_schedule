@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Servidor } from '../../models/servidor.model';
 import { ServidorService } from '../../services/servidor.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-servidores',
@@ -127,21 +128,63 @@ export class ServidoresComponent implements OnInit {
 
   salvar() {
     if (!this.cadastro.nome || !this.cadastro.matricula) {
-      alert('Preencha Nome e Matrícula!');
+      Swal.fire({
+        title: 'Atenção!',
+        text: 'Preencha Nome e Matrícula antes de salvar.',
+        icon: 'warning',
+        confirmButtonColor: '#f39c12'
+      });
       return;
     }
 
     if (this.cadastro.id) {
-      // MODO EDIÇÃO
       this.service.atualizar(this.cadastro).subscribe(() => {
         this.finalizarAcao('Servidor atualizado com sucesso!');
       });
     } else {
-      // MODO CRIAÇÃO
       this.service.cadastrar(this.cadastro).subscribe(() => {
         this.finalizarAcao('Servidor cadastrado com sucesso!');
       });
     }
+  }
+
+  finalizarAcao(mensagem: string) {
+    Swal.fire({
+      title: 'Sucesso!',
+      text: mensagem,
+      icon: 'success',
+      confirmButtonColor: '#28a745'
+    });
+    this.carregar();
+    this.cancelar();
+  }
+
+  excluir(id: number | undefined) {
+    if (!id) return;
+    
+    Swal.fire({
+      title: 'Desativar Servidor?',
+      text: 'Ele será inativado e não aparecerá mais nas novas escalas.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sim, inativar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.excluir(id).subscribe({
+          next: () => {
+            Swal.fire('Inativado!', 'O servidor foi removido da lista ativa.', 'success');
+            this.carregar(); 
+          },
+          error: (erro) => {
+            console.error('Erro ao excluir:', erro);
+            Swal.fire('Erro!', 'Não foi possível inativar o servidor.', 'error');
+          }
+        });
+      }
+    });
   }
 
   editar(item: Servidor) {
@@ -158,32 +201,12 @@ export class ServidoresComponent implements OnInit {
     this.cdr.detectChanges(); // Atualiza a tela
   }
 
-  excluir(id: number | undefined) {
-    if (!id) return;
-    
-    if (confirm('Tem certeza que deseja excluir (inativar) este servidor?')) {
-      this.service.excluir(id).subscribe({
-        next: () => {
-          alert('Servidor inativado com sucesso!');
-          this.carregar(); // Recarrega a lista do banco para aplicar os filtros certinho
-        },
-        error: (erro) => {
-          console.error('Erro ao excluir:', erro);
-          alert('Erro ao tentar excluir o servidor.');
-        }
-      });
-    }
-  }
+ 
 
   cancelar() {
     this.cadastro = this.criarFormularioVazio();
   }
 
-  finalizarAcao(mensagem: string) {
-    alert(mensagem);
-    this.carregar();
-    this.cancelar();
-  }
 
   // Helper para cor da badge de situação
   getClasseSituacao(situacao: string): string {
