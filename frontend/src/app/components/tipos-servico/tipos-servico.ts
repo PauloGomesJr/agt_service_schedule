@@ -3,6 +3,10 @@ import { HeaderComponent } from '../header/header';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+// === IMPORTAÇÃO DO SWEETALERT2 ===
+import Swal from 'sweetalert2';
+// =================================
+
 // IMPORTAR O SERVICE
 import { TipoServicoService } from '../../services/tipo-servico'; // (ou .service se renomeou)
 
@@ -91,25 +95,63 @@ export class TiposServicoComponent implements OnInit {
   salvar() {
     if (!this.emEdicao) return;
     
-    // Pequena conversão para garantir tipos numéricos
     this.emEdicao.horasTotais = Number(this.emEdicao.horasTotais);
     this.emEdicao.horasNoturnas = Number(this.emEdicao.horasNoturnas);
 
     this.service.salvar(this.emEdicao).subscribe({
       next: () => {
-        alert('Salvo com sucesso!');
+        // MÁGICA DO SUCESSO AQUI:
+        Swal.fire({
+          title: 'Sucesso!',
+          text: 'Turno salvo com sucesso!',
+          icon: 'success',
+          confirmButtonColor: '#27ae60' // Verde combinando com seu botão
+        });
+
         this.emEdicao = null;
         this.carregar();
       },
-      error: (err) => alert('Erro ao salvar. Verifique se o código já existe.')
+      error: (err) => {
+        // MÁGICA DO ERRO AQUI:
+        Swal.fire({
+          title: 'Erro!',
+          text: 'Erro ao salvar. Verifique se o código já existe.',
+          icon: 'error',
+          confirmButtonColor: '#e74c3c'
+        });
+      }
     });
   }
 
   excluir(id?: number) {
     if (!id) return;
-    if (confirm('Tem certeza? Isso pode afetar escalas antigas.')) {
-      this.service.excluir(id).subscribe(() => this.carregar());
-    }
+    
+    // MÁGICA DA CONFIRMAÇÃO AQUI:
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Isso pode afetar escalas antigas que usam este turno!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c', // Vermelho para perigo
+      cancelButtonColor: '#95a5a6',  // Cinza para cancelar
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      // Se o usuário clicou no botão vermelho de confirmar:
+      if (result.isConfirmed) {
+        this.service.excluir(id).subscribe(() => {
+          
+          Swal.fire({
+            title: 'Excluído!',
+            text: 'O turno foi removido.',
+            icon: 'success',
+            confirmButtonColor: '#27ae60'
+          });
+          
+          this.carregar();
+        });
+      }
+    });
   }
 
   cancelar() {
