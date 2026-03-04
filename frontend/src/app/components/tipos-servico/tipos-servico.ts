@@ -55,11 +55,19 @@ export class TiposServicoComponent implements OnInit {
   carregar() {
     this.service.listar().subscribe({
       next: (dados) => {
-        // Esta é a linha mágica que atualiza a tela
-        this.lista = dados; 
-        console.log('Lista atualizada:', this.lista); // Log de confirmação
+        // === ORDENAÇÃO ALFABÉTICA PELO CÓDIGO (SIGLA) ===
+        dados.sort((a, b) => {
+          const codA = (a.codigo || '').trim().toUpperCase();
+          const codB = (b.codigo || '').trim().toUpperCase();
+          return codA.localeCompare(codB);
+        });
+        // ================================================
 
-        // 3. A linha mágica: Força a atualização da tela
+        // Atualiza a tela com a lista já ordenada
+        this.lista = dados; 
+        console.log('Lista de turnos ordenada:', this.lista); 
+
+        // Força a atualização da tela
         this.cdr.detectChanges();
       },
       error: (erro) => {
