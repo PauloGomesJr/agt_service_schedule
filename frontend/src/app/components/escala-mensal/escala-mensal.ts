@@ -13,9 +13,10 @@ import { Servidor } from '../../models/servidor.model';
 import { TipoServico } from '../../models/tipo-servico.model';
 import { Escala, EscalaDTO } from '../../models/escala.model';
 
-// === IMPORTAÇÕES NOVAS PARA O PDF ===
+// === IMPORTAÇÕES PARA O PDF E ALERTAS ===
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-escala-mensal',
@@ -30,10 +31,10 @@ export class EscalaMensalComponent implements OnInit {
   servidores: Servidor[] = [];
   tiposServico: TipoServico[] = [];
   
-  // Lista original (para cálculos e lógica)
+  // Lista original
   escalas: Escala[] = []; 
   
-  // Mapa visual: { idServidor: { dia: 'A', dia2: 'F' } }
+  // Mapa visual
   mapaEscalas: any = {}; 
 
   dataReferencia = new Date(); 
@@ -49,7 +50,7 @@ export class EscalaMensalComponent implements OnInit {
   dataInicioSemana: string = '';
 
   escalaSelecionada: any = {
-    id: null, // <--- CAMPO NOVO: Para saber qual excluir
+    id: null,
     servidorId: null,
     nomeServidor: '',
     data: null, 
@@ -89,7 +90,7 @@ export class EscalaMensalComponent implements OnInit {
     }
 
     this.gerarDiasDoMes();
-    this.atualizarMapaVisualizacao(); // Recalcula o mapa para o novo mês
+    this.atualizarMapaVisualizacao();
   }
 
   getDataVisualizacao(): Date {
@@ -99,18 +100,11 @@ export class EscalaMensalComponent implements OnInit {
   carregarDados() {
     this.servidorService.listar().subscribe(dados => {
       this.servidores = dados.filter(s => s.situacao === 'ATIVO');
-      
-      // === ORDENAÇÃO PELO NOME DE GUERRA ===
       this.servidores.sort((a, b) => {
-        // Pega o nome de guerra. Se por acaso o cadastro estiver sem nome de guerra, 
-        // ele pega o primeiro nome como plano B, garantindo que nada quebre.
         const nomeA = (a.nomeGuerra || a.nome.split(' ')[0] || '').trim().toUpperCase();
         const nomeB = (b.nomeGuerra || b.nome.split(' ')[0] || '').trim().toUpperCase();
-        
         return nomeA.localeCompare(nomeB);
       });
-      // =====================================
-
       this.cdr.detectChanges();
     });
 
@@ -128,18 +122,14 @@ export class EscalaMensalComponent implements OnInit {
 
   atualizarMapaVisualizacao() {
     this.mapaEscalas = {}; 
-
     this.escalas.forEach(escala => {
         const partes = escala.data.split('-'); 
-        
         const anoEscala = parseInt(partes[0]);        
         const mesEscala = parseInt(partes[1]) - 1;    
         const dia = parseInt(partes[2]);              
 
         if (anoEscala === this.anoAtual && mesEscala === this.mesAtual) {
-            
             const idServidor = escala.servidor.id;
-            
             if (idServidor) {
                 if (!this.mapaEscalas[idServidor]) {
                     this.mapaEscalas[idServidor] = {};
@@ -148,7 +138,6 @@ export class EscalaMensalComponent implements OnInit {
             }
         }
     });
-    console.log(`Mapa reconstruído para o mês ${this.mesAtual + 1}/${this.anoAtual}`);
   }
 
   calcularTotalHoras(servidorId: number | undefined): number {
@@ -163,30 +152,36 @@ export class EscalaMensalComponent implements OnInit {
     return escalasDoMes.reduce((total, escala) => total + escala.tipoServico.horasTotais, 0);
   }
 
- abrirModal(servidor: Servidor, data: Date) {
+  abrirModal(servidor: Servidor, data: Date) {
     const dataStr = data.toISOString().split('T')[0];
     const escalaExistente = this.escalas.find(e => 
       e.servidor.id === servidor.id && e.data === dataStr
     );
 
-    // === INTERCEPTADOR DE PERMUTA ===
-    // Se o botão permutar foi clicado antes, o próximo clique cai aqui!
     if (this.modoPermuta) {
       if (!escalaExistente) {
-        alert('Para permutar, clique em um plantão que já tenha sido marcado (célula colorida).');
+        Swal.fire({
+          title: 'Atenção!',
+          text: 'Para permutar, clique em um plantão que já tenha sido marcado (célula colorida).',
+          icon: 'info',
+          confirmButtonColor: '#3498db'
+        });
         return;
       }
       if (escalaExistente.id === this.escalaOrigemPermuta.id) {
-        alert('Você não pode permutar um plantão com ele mesmo.');
+        Swal.fire({
+          title: 'Não permitido',
+          text: 'Você não pode permutar um plantão com ele mesmo.',
+          icon: 'warning',
+          confirmButtonColor: '#e67e22'
+        });
         return;
       }
       
-      // Executa a troca
       this.executarPermuta(escalaExistente.id, servidor.nomeGuerra || servidor.nome.split(' ')[0], data);
-      return; // Para a execução aqui, não abre o modal normal.
+      return;
     }
 
-    // === FLUXO NORMAL (Se não estiver em permuta, abre o modal) ===
     this.escalaSelecionada = {
       id: null,
       servidorId: servidor.id,
@@ -208,7 +203,11 @@ export class EscalaMensalComponent implements OnInit {
 
   salvarEscala() {
     if (!this.escalaSelecionada.tipoServicoId) {
-      alert('Selecione um turno!');
+      Swal.fire({
+        text: 'Por favor, selecione um turno para este plantão.',
+        icon: 'warning',
+        confirmButtonColor: '#f39c12'
+      });
       return;
     }
 
@@ -223,65 +222,67 @@ export class EscalaMensalComponent implements OnInit {
 
     this.escalaService.salvar(dto).subscribe({
       next: (novaEscala) => {
-        // Atualiza a LISTA (Remove antigo se houver e põe o novo)
         this.escalas = this.escalas.filter(e => 
           !(e.servidor.id === novaEscala.servidor.id && e.data === novaEscala.data)
         );
         this.escalas.push(novaEscala);
-        
         this.atualizarMapaVisualizacao();
         this.cdr.detectChanges(); 
         this.fecharModal();
+        
+        // Alerta discreto de sucesso (opcional)
+        // Swal.fire({ title: 'Salvo!', icon: 'success', timer: 1000, showConfirmButton: false });
       },
       error: (err) => {
-        console.error('Erro detalhado:', err);
         let mensagem = 'Erro ao salvar escala.';
-        if (err.error && err.error.message) {
-             mensagem = err.error.message;
-        } else if (err.error && typeof err.error === 'string') {
-             mensagem = err.error;
-        }
-        alert('⚠️ Não foi possível salvar:\n' + mensagem);
+        if (err.error && err.error.message) mensagem = err.error.message;
+        else if (err.error && typeof err.error === 'string') mensagem = err.error;
+
+        Swal.fire({
+          title: 'Bloqueado!',
+          text: mensagem,
+          icon: 'error',
+          confirmButtonColor: '#e74c3c'
+        });
       }
     });
   }
 
-  // === NOVO MÉTODO: EXCLUIR ===
   excluirEscala() {
-    // Só exclui se tiver ID
     if (!this.escalaSelecionada.id) return;
 
-    if (confirm('Tem certeza que deseja remover esta escala?')) {
-      this.escalaService.excluir(this.escalaSelecionada.id).subscribe({
-        next: () => {
-          // 1. Remove da lista local (memória)
-          this.escalas = this.escalas.filter(e => e.id !== this.escalaSelecionada.id);
-          
-          // === A CORREÇÃO ESTÁ AQUI ===
-          // PRIMEIRO: Fecha o modal (Define modalAberto = false)
-          this.fecharModal(); 
-
-          // SEGUNDO: Atualiza o visual (tira a cor da célula)
-          this.atualizarMapaVisualizacao();
-
-          // TERCEIRO: Manda o Angular aplicar as mudanças na tela
-          // Como a variável modalAberto já é false, ele vai remover o modal da tela agora.
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Erro ao excluir escala.');
-        }
-      });
-    }
+    Swal.fire({
+      title: 'Remover plantão?',
+      text: "Esta ação não pode ser desfeita.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, remover!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.escalaService.excluir(this.escalaSelecionada.id).subscribe({
+          next: () => {
+            this.escalas = this.escalas.filter(e => e.id !== this.escalaSelecionada.id);
+            this.fecharModal(); 
+            this.atualizarMapaVisualizacao();
+            this.cdr.detectChanges();
+            
+            Swal.fire('Removido!', 'O plantão foi excluído.', 'success');
+          },
+          error: (err) => {
+            Swal.fire('Erro!', 'Não foi possível excluir o plantão.', 'error');
+          }
+        });
+      }
+    });
   }
 
-  // === MÉTODOS DE PERMUTA ===
   iniciarPermuta() {
     this.modoPermuta = true;
-    // Guarda os dados de quem vai ceder o plantão
     this.escalaOrigemPermuta = { ...this.escalaSelecionada };
-    this.fecharModal(); // Fecha o modal para o usuário poder clicar no destino
+    this.fecharModal();
   }
 
   cancelarPermuta() {
@@ -293,112 +294,112 @@ export class EscalaMensalComponent implements OnInit {
     const dataOrigemStr = this.escalaOrigemPermuta.data.toLocaleDateString('pt-BR');
     const dataDestStr = dataDestino.toLocaleDateString('pt-BR');
 
-    const msg = `Confirma a TROCA DE PLANTÕES?\n\nSAI: ${this.escalaOrigemPermuta.nomeServidor} (${dataOrigemStr})\nENTRA: ${nomeDestino} (${dataDestStr})`;
+    Swal.fire({
+      title: 'Confirmar Troca?',
+      html: `Deseja permutar os plantões entre:<br><br><b>${this.escalaOrigemPermuta.nomeServidor}</b> (${dataOrigemStr})<br><b>${nomeDestino}</b> (${dataDestStr})`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#27ae60',
+      cancelButtonColor: '#95a5a6',
+      confirmButtonText: 'Sim, permutar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.escalaService.permutar(this.escalaOrigemPermuta.id, destinoId).subscribe({
+          next: () => {
+            const esc1 = this.escalas.find(e => e.id === this.escalaOrigemPermuta.id);
+            const esc2 = this.escalas.find(e => e.id === destinoId);
+            
+            if (esc1 && esc2) {
+                const tempServidor = esc1.servidor;
+                esc1.servidor = esc2.servidor;
+                esc2.servidor = tempServidor;
+            }
 
-    if (confirm(msg)) {
-      this.escalaService.permutar(this.escalaOrigemPermuta.id, destinoId).subscribe({
-        next: () => {
-          // Atualiza as listas locais para refletir a troca sem precisar recarregar a página
-          const esc1 = this.escalas.find(e => e.id === this.escalaOrigemPermuta.id);
-          const esc2 = this.escalas.find(e => e.id === destinoId);
-          
-          if (esc1 && esc2) {
-              const tempServidor = esc1.servidor;
-              esc1.servidor = esc2.servidor;
-              esc2.servidor = tempServidor;
+            this.cancelarPermuta();
+            this.atualizarMapaVisualizacao();
+            this.cdr.detectChanges();
+            
+            Swal.fire('Sucesso!', 'Permuta realizada com sucesso!', 'success');
+          },
+          error: (err) => {
+            let mensagem = 'Erro interno ao realizar permuta.';
+            if (err && err.error && err.error.message) mensagem = err.error.message;
+            else if (err && err.error && typeof err.error === 'string') mensagem = err.error;
+            
+            Swal.fire('Permuta Recusada', mensagem, 'error');
+            this.cancelarPermuta();
           }
-
-          this.cancelarPermuta();
-          this.atualizarMapaVisualizacao();
-          this.cdr.detectChanges();
-          alert('Permuta realizada com sucesso!');
-        },
-        error: (err) => {
-          console.error('Erro detalhado:', err);
-          let mensagem = 'Erro interno ao realizar permuta.';
-          
-          if (err && err.error && err.error.message) {
-               mensagem = err.error.message;
-          } else if (err && err.error && typeof err.error === 'string') {
-               mensagem = err.error;
-          }
-          
-          alert('⚠️ Permuta Recusada:\n' + mensagem);
-          this.cancelarPermuta(); // Tira o modo amarelo se der erro
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
-  // === NOVO MÉTODO: GERAR PDF ===
   gerarPDF() {
-    // 1. Cria o documento PDF
-    // 'l' = landscape (paisagem), 'mm' = milímetros, 'a4' = tamanho do papel
     const doc = new jsPDF('l', 'mm', 'a4');
-
-    // 2. Título do Documento
     const mesFormatado = this.getDataVisualizacao().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
     doc.setFontSize(18);
     doc.text(`Escala de Serviço - ${mesFormatado.toUpperCase()}`, 15, 15);
 
-    // 3. Gera a tabela a partir do HTML
     autoTable(doc, {
-      html: '#tabela-escala', // Vamos adicionar esse ID no HTML agora!
-      startY: 25,             // Começa um pouco abaixo do título
-      theme: 'grid',          // Estilo de grade (linhas pretas)
+      html: '#tabela-escala',
+      startY: 25,
+      theme: 'grid',
       styles: {
-        fontSize: 7,          // Fonte pequena para caber os 31 dias
-        cellPadding: 1,       // Pouco espaço interno para economizar papel
-        halign: 'center',     // Centraliza o texto
-        valign: 'middle'      // Centraliza verticalmente
+        fontSize: 7,
+        cellPadding: 1,
+        halign: 'center',
+        valign: 'middle'
       },
       headStyles: {
-        fillColor: [52, 73, 94], // Cor do cabeçalho (Azul Escuro)
-        textColor: 255           // Texto branco
+        fillColor: [52, 73, 94],
+        textColor: 255
       },
-      // Pinta as células de acordo com o texto (A, B, C, F)
       didParseCell: (data) => {
-        //const texto = data.cell.raw as string; // Pega o conteúdo(html inteiro) da célula
-        const texto = data.cell.text.join(''); // Pega o conteúdo(texto) da célula
-        // Se for célula de corpo (não cabeçalho)
-        if (data.section === 'body' && data.column.index > 0) { // Ignora coluna 0 (Nome)
+        const texto = data.cell.text.join('');
+        if (data.section === 'body' && data.column.index > 0) {
             if (texto.includes('F')) {
-                data.cell.styles.fillColor = [255, 235, 59]; // Amarelo (Férias/Folga)
+                data.cell.styles.fillColor = [255, 235, 59];
             } else if (texto.includes('C')) {
-                data.cell.styles.fillColor = [41, 128, 185]; // Azul (Noite)
+                data.cell.styles.fillColor = [41, 128, 185];
                 data.cell.styles.textColor = 255;
             } else if (texto.includes('A')) {
-                data.cell.styles.fillColor = [46, 204, 113]; // Verde (Manhã)
+                data.cell.styles.fillColor = [46, 204, 113];
             }
         }
       }
     });
-
-    // 4. Salva o arquivo
     doc.save(`Escala_${mesFormatado}.pdf`);
   }
 
-  // === NOVO MÉTODO: RELATÓRIO SEMANAL CUSTOMIZADO ===
   gerarPDFSemanal() {
-    // 1. Verifica se o usuário escolheu uma data
     if (!this.dataInicioSemana) {
-        alert('Por favor, escolha uma data de início no calendário ao lado do botão.');
+        Swal.fire('Atenção', 'Por favor, escolha uma data de início no calendário.', 'info');
         return;
     }
 
-    // 2. Converte a data string (YYYY-MM-DD) para Objeto Date de forma segura (sem bugar o fuso horário)
     const partes = this.dataInicioSemana.split('-');
     const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
 
-    // 3. Avisa se não for sábado, mas permite continuar se o usuário quiser
-    if (dataInicio.getDay() !== 6) { // 6 = Sábado
-        const confirma = confirm('A data escolhida não é um Sábado. Deseja gerar os 7 dias a partir deste dia mesmo assim?');
-        if (!confirma) return;
+    // Lógica para data diferente de Sábado com SweetAlert2
+    if (dataInicio.getDay() !== 6) { 
+        Swal.fire({
+          title: 'Data diferente de Sábado',
+          text: 'Deseja gerar os 7 dias a partir deste dia mesmo assim?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, gerar!',
+          cancelButtonText: 'Não, cancelar'
+        }).then((res) => {
+          if (res.isConfirmed) this.processarGeracaoSemanal(dataInicio);
+        });
+    } else {
+        this.processarGeracaoSemanal(dataInicio);
     }
+  }
 
+  private processarGeracaoSemanal(dataInicio: Date) {
     const doc = new jsPDF('p', 'mm', 'a4');
-    
-    // 4. Monta o array com os 7 dias consecutivos
     const diasDaSemana: Date[] = [];
     for (let j = 0; j < 7; j++) {
         const dia = new Date(dataInicio);
@@ -406,76 +407,47 @@ export class EscalaMensalComponent implements OnInit {
         diasDaSemana.push(dia);
     }
 
-    // Textos para o título
     const inicioStr = diasDaSemana[0].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const fimStr = diasDaSemana[6].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     
     doc.setFontSize(14);
     doc.text(`Escala Semanal: ${inicioStr} a ${fimStr}`, 105, 20, { align: 'center' });
 
-    // 5. Cabeçalho da Tabela
     const headRow = ['Servidor', ...diasDaSemana.map(d => 
         `${d.getDate()}/${(d.getMonth()+1).toString().padStart(2,'0')} (${d.toLocaleDateString('pt-BR', { weekday: 'short' }).slice(0,3)})`
     )];
 
-    // 6. Corpo da Tabela
     const bodyRows = this.servidores.map(servidor => {
         const nomeExibicao = servidor.nomeGuerra || servidor.nome.split(' ')[0];
-        
         const turnosSemana = diasDaSemana.map(dia => {
-            // O PULO DO GATO: Busca direto no array original de escalas ("this.escalas").
-            // Isso permite que a semana comece em Fevereiro e termine em Março sem perder dados.
-            const dataFormatada = dia.toLocaleDateString('en-CA'); // Fica "YYYY-MM-DD"
+            const dataFormatada = dia.toLocaleDateString('en-CA'); 
             const escalaEncontrada = this.escalas.find(e => e.servidor.id === servidor.id && e.data === dataFormatada);
-            
             return escalaEncontrada ? escalaEncontrada.tipoServico.codigo : '';
         });
-
         return [nomeExibicao, ...turnosSemana];
     });
 
-    // 7. Desenha a Tabela
     autoTable(doc, {
         startY: 30,
         head: [headRow],
         body: bodyRows,
         theme: 'grid',
-        styles: {
-            fontSize: 9,
-            cellPadding: 3,
-            halign: 'center',
-            valign: 'middle'
-        },
-        headStyles: {
-            fillColor: [44, 62, 80],
-            textColor: 255,
-            fontStyle: 'bold'
-        },
-        columnStyles: {
-            0: { halign: 'left', fontStyle: 'bold', cellWidth: 40 }
-        },
+        styles: { fontSize: 9, cellPadding: 3, halign: 'center', valign: 'middle' },
+        headStyles: { fillColor: [44, 62, 80], textColor: 255, fontStyle: 'bold' },
+        columnStyles: { 0: { halign: 'left', fontStyle: 'bold', cellWidth: 40 } },
         didParseCell: (data) => {
             if (data.section === 'body' && data.column.index > 0) {
-                let texto = '';
-                if (data.cell && data.cell.text) {
-                    texto = Array.isArray(data.cell.text) ? data.cell.text.join('') : String(data.cell.text);
-                }
-                
-                if (texto.includes('F')) {
-                    data.cell.styles.fillColor = [255, 235, 59];
-                } else if (texto.includes('C') || texto.includes('W')) {
+                let texto = data.cell.text.join('');
+                if (texto.includes('F')) data.cell.styles.fillColor = [255, 235, 59];
+                else if (texto.includes('C') || texto.includes('W')) {
                     data.cell.styles.fillColor = [41, 128, 185];
                     data.cell.styles.textColor = 255;
-                } else if (texto.includes('A')) {
-                    data.cell.styles.fillColor = [46, 204, 113];
-                } else if (texto.includes('B')) {
-                    data.cell.styles.fillColor = [230, 126, 34];
-                }
+                } else if (texto.includes('A')) data.cell.styles.fillColor = [46, 204, 113];
+                else if (texto.includes('B')) data.cell.styles.fillColor = [230, 126, 34];
             }
         }
     });
 
-    // 8. Salva o PDF com nome limpo
     const nomeArquivo = `Escala_Semanal_${inicioStr.replace(/\//g, '-')}.pdf`;
     doc.save(nomeArquivo);
   }
@@ -494,6 +466,8 @@ export class EscalaMensalComponent implements OnInit {
       case 'A': return 'turno-manha';
       case 'B': return 'turno-tarde';
       case 'C': return 'turno-noite';
+      case 'D': return 'turno-manha';
+      case 'E': return 'turno-noite';
       case 'F': return 'turno-folga';
       case 'W': return 'turno-noite';
       default:  return 'turno-padrao'; 
