@@ -30,6 +30,20 @@ public class EscalaDiaria implements Serializable {
     @JoinColumn(name = "tipo_servico_id", nullable = false)
     private TipoServico tipoServico;
 
+    // ... outros campos (data, observacao, etc)
+
+    @Column(columnDefinition = "TEXT")
+    private String determinacao;
+
+    // Lembre-se de gerar os Getters e Setters para este novo campo no final do arquivo!
+    public String getDeterminacao() {
+        return determinacao;
+    }
+
+    public void setDeterminacao(String determinacao) {
+        this.determinacao = determinacao;
+    }
+
     // Campo para observações (ex: "Troca autorizada", "Atraso", etc)
     @Column(columnDefinition = "TEXT")
     private String observacao;

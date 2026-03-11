@@ -98,6 +98,17 @@
           </option>
         }
       </select>
+      <div style="margin-top: 15px;">
+          <label style="font-weight: bold; display: block; margin-bottom: 5px;">
+            Determinação (Missão do Plantão):
+          </label>
+          <textarea 
+            [(ngModel)]="escalaSelecionada.determinacao" 
+            rows="3" 
+            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"
+            placeholder="Ex: Operação Lei Seca na Av. Principal; Foco em fluidez no cruzamento X..."
+          ></textarea>
+        </div>
     </div>
 
    <div class="modal-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">

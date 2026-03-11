@@ -182,17 +182,20 @@ export class EscalaMensalComponent implements OnInit {
       return;
     }
 
-    this.escalaSelecionada = {
+     this.escalaSelecionada = {
       id: null,
       servidorId: servidor.id,
       nomeServidor: servidor.nome,
       data: data,
-      tipoServicoId: null 
+      tipoServicoId: null,
+      determinacao: '' // <--- Campo zerado ao abrir para novo plantão
     };
     
     if (escalaExistente) {
       this.escalaSelecionada.id = escalaExistente.id; 
       this.escalaSelecionada.tipoServicoId = escalaExistente.tipoServico.id;
+      // Carrega a determinação se ela existir no banco
+      this.escalaSelecionada.determinacao = escalaExistente.determinacao || ''; 
     }
     this.modalAberto = true;
   }
@@ -217,7 +220,8 @@ export class EscalaMensalComponent implements OnInit {
       servidorId: this.escalaSelecionada.servidorId,
       tipoServicoId: this.escalaSelecionada.tipoServicoId,
       data: dataFormatada,
-      observacao: 'Inserido via Web'
+      observacao: 'Inserido via Web',
+      determinacao: this.escalaSelecionada.determinacao 
     };
 
     this.escalaService.salvar(dto).subscribe({

@@ -8,6 +8,7 @@ export interface Escala {
   servidor: Servidor;     // Objeto completo
   tipoServico: TipoServico; // Objeto completo
   observacao?: string;
+  determinacao?: string;  
 }
 
 // Interface para GRAVAÇÃO (O que enviamos para salvar)
@@ -17,4 +18,5 @@ export interface EscalaDTO {
   tipoServicoId: number;  // Mandamos só o ID
   data: string;
   observacao?: string;
+  determinacao?: string; 
 }
