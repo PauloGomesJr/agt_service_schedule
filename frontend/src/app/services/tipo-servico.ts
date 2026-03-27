@@ -9,7 +9,7 @@ import { TipoServico } from '../models/tipo-servico.model';
 })
 export class TipoServicoService {
   
-  private apiUrl = 'http://localhost:8081/api/tipos-servico';
+  private apiUrl = 'https://agt-service-schedule.onrender.com/api/tipos-servico';
 
   constructor(private http: HttpClient) { }
 

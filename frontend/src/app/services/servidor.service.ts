@@ -8,7 +8,7 @@ import { Servidor } from '../models/servidor.model';
 })
 export class ServidorService {
   // URL da API
-  private apiUrl = 'http://localhost:8081/api/servidores';
+  private apiUrl = 'https://agt-service-schedule.onrender.com/api/servidores';
 
   constructor(private http: HttpClient) { }
 

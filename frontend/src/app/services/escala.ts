@@ -8,7 +8,7 @@ import { Escala, EscalaDTO } from '../models/escala.model';
 })
 export class EscalaService {
 
-  private apiUrl = 'http://localhost:8081/api/escalas';
+  private apiUrl = 'https://agt-service-schedule.onrender.com/api/escalas';
 
   constructor(private http: HttpClient) { }
 
