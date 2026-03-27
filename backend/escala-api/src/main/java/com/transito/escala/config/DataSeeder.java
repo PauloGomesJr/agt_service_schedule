@@ -19,7 +19,7 @@ public class DataSeeder implements CommandLineRunner {
 
    @Override
     public void run(String... args) throws Exception {
-        if (tipoServicoRepository.count() <= 1) { 
+        if (tipoServicoRepository.count() == 0) {
             
             System.out.println("---- INICIANDO CARGA DE DADOS DE TESTE ----");
 
