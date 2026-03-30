@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
   
-  private apiUrl = 'https://agt-service-schedule.onrender.com/api/auth';
+  private apiUrl = 'https://agt-service-schedule.onrender.com/auth';
 
   constructor(private http: HttpClient) { }
 
