@@ -47,7 +47,8 @@ public class TokenService {
     }
 
     private Instant gerarDataExpiracao() {
-        // Define que o token dura 2 horas (após isso, o usuário tem que logar de novo)
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        // Usa o relógio universal (UTC), imune ao fuso horário do servidor do Render.
+        // Soma 7200 segundos (exatamente 2 horas) à hora exata de agora.
+        return Instant.now().plusSeconds(7200); 
     }
 }
