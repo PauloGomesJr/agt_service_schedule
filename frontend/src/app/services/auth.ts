@@ -7,16 +7,19 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
   
-  private apiUrl = 'https://agt-service-schedule.onrender.com/auth';
+  private apiUrl = 'https://agt-service-schedule.onrender.com/api/auth';
 
   constructor(private http: HttpClient) { }
 
   login(credenciais: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credenciais).pipe(
       tap(resposta => {
+        
+        // === O NOSSO ESPIÃO VAI DEDURAR O JAVA AQUI: ===
+        console.log('RESPOSTA DO JAVA:', resposta); 
+
         if (resposta && resposta.token) {
           localStorage.setItem('token', resposta.token);
-          // === NOVO: Salvamos também o nome de quem logou ===
           localStorage.setItem('usuarioLogado', credenciais.login); 
         }
       })

@@ -48,13 +48,11 @@ public class SecurityConfigurations {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permite o seu Angular
-        // Permite o seu Angular local E o seu Angular na Nuvem (Vercel)
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://agt-service-schedule.vercel.app"));
-        // Permite os métodos que usamos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        // Permite os cabeçalhos de Token e JSON
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        
+        // MUDANÇA AQUI: Trocamos os nomes específicos por um * para liberar tudo
+        configuration.setAllowedHeaders(Arrays.asList("*")); 
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
