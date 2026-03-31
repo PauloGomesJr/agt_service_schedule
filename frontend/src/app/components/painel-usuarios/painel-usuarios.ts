@@ -5,7 +5,7 @@ import { UsuarioService } from '../../services/usuario';
 @Component({
   selector: 'app-painel-usuarios',
   templateUrl: './painel-usuarios.html',
-  styleUrls: ['./painel-usuarios.css']
+  styleUrls: ['./painel-usuarios.scss']
 })
 export class PainelUsuariosComponent implements OnInit {
 
