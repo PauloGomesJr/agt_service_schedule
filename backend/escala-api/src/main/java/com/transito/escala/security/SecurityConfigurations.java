@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                         // Deixa o navegador fazer as perguntas preliminares sem exigir token!
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // ========================
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
                         .anyRequest().authenticated()

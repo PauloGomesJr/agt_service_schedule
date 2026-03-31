@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/escalas")
-@CrossOrigin(origins = "*")
 public class EscalaDiariaController {
 
     // NOME CORRIGIDO E PADRONIZADO

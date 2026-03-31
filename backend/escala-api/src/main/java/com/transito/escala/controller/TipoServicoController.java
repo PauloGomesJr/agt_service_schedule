@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tipos-servico")
-@CrossOrigin(origins = "http://localhost:4200") // Recomendado especificar a porta do Angular
 public class TipoServicoController {
 
     private final TipoServicoService service;
