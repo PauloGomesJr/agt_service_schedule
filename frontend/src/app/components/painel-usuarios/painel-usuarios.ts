@@ -48,3 +48,4 @@ export class PainelUsuariosComponent implements OnInit {
     }
   }
 }
+// Teste para forçar o Vercel a rodar
