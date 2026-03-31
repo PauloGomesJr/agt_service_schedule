@@ -69,6 +69,17 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() { return true; }
 
+    // ... dentro da classe Usuario ...
+    @Column(nullable = false)
+    private boolean aprovado = false; // Todo usuário novo começa "bloqueado"
+
+    // Atualize o método que o Spring Security usa para validar o acesso
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() { 
+        return aprovado; // O usuário só "existe" para o sistema se for aprovado
+    }
+
+    // Adicione o Getter e Setter para o campo aprovado
+    public boolean isAprovado() { return aprovado; }
+    public void setAprovado(boolean aprovado) { this.aprovado = aprovado; }
 }
