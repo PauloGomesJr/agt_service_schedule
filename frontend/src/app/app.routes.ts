@@ -8,6 +8,8 @@ import { ServidoresComponent } from './components/servidores/servidores';
 // Novas importações de Segurança
 import { LoginComponent } from './components/login/login';
 import { authGuard } from './guards/auth-guard';
+import { PainelUsuariosComponent } from './components/painel-usuarios/painel-usuarios';
+import { AdminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   // 1. Rota raiz agora joga para o Login
@@ -22,5 +24,12 @@ export const routes: Routes = [
   { path: 'servidores', component: ServidoresComponent, canActivate: [authGuard] },
   
   // 4. Se o usuário digitar qualquer URL maluca, volta pro Login
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' },
+
+  // Dentro do seu array de rotas (Routes):
+{ 
+  path: 'painel-usuarios', 
+  component: PainelUsuariosComponent, 
+  canActivate: [AdminGuard] // <--- A Mágica acontece aqui
+}
 ];

@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <h2>Portaria: Aprovação de Usuários</h2>
+  <p>Abaixo estão os servidores que se cadastraram e aguardam liberação para acessar as escalas.</p>
+
+  @if (mensagem) {
+    <div class="alert alert-success">
+      {{ mensagem }}
+    </div>
+  }
+
+  @if (usuariosPendentes.length > 0) {
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Login / Usuário</th>
+          <th>Nível de Acesso</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of usuariosPendentes; track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.login }}</td>
+            <td>
+              <span class="badge bg-secondary">
+                {{ user.role === 'ADMIN' ? 'Administrador' : 'Servidor' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-success btn-sm" (click)="aprovarUsuario(user.id, user.login)">
+                ✓ Aprovar Acesso
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <div class="alert alert-info">
+      Não há nenhum usuário aguardando aprovação no momento.
+    </div>
+  }
+</div>
