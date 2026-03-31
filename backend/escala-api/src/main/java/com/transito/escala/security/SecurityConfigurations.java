@@ -29,30 +29,33 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // 1. Ativa a nossa configuração de CORS logo de cara
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // 2. Rotas abertas para Login e Registro
+                        // === A SOLUÇÃO MÁGICA ===
+                        // Deixa o navegador fazer as perguntas preliminares sem exigir token!
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // ========================
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
-                        // 3. Todo o resto da API exige o token JWT
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    // === CONFIGURAÇÃO DO CORS ===
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // Suas URLs estão corretíssimas
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://agt-service-schedule.vercel.app"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         
-        // MUDANÇA AQUI: Trocamos os nomes específicos por um * para liberar tudo
-        configuration.setAllowedHeaders(Arrays.asList("*")); 
+        // === VITAL PARA TOKENS JWT ===
+        // Isso avisa ao navegador que ele pode processar as credenciais/tokens em segurança.
+        configuration.setAllowCredentials(true); 
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
