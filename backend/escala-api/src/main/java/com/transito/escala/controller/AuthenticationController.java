@@ -13,10 +13,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 @RestController
-@RequestMapping("/auth")
-@CrossOrigin(origins = "*")
+@RequestMapping("auth")
+// Substitua o "*" por esta lista com o seu Localhost e o seu Vercel:
+@CrossOrigin(origins = {"http://localhost:4200", "https://agt-service-schedule.vercel.app"})
 public class AuthenticationController {
 
     @Autowired

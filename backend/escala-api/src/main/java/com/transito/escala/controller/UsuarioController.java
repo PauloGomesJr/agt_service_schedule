@@ -10,7 +10,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@CrossOrigin(origins = "*")
+// Substitua o "*" por esta lista também:
+@CrossOrigin(origins = {"http://localhost:4200", "https://agt-service-schedule.vercel.app"})
 public class UsuarioController {
 
     @Autowired
