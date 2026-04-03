@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // <--- Importação obrigatória
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../services/usuario';
 
 @Component({
   selector: 'app-painel-usuarios',
-  standalone: true, // <--- A MÁGICA ESTÁ AQUI!
-  imports: [CommonModule], // <--- E AQUI!
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './painel-usuarios.html',
-  styleUrl: './painel-usuarios.scss' // Correção: no Angular 17 é styleUrl no singular
+  styleUrl: './painel-usuarios.scss'
 })
 export class PainelUsuariosComponent implements OnInit {
 
   usuariosPendentes: any[] = [];
   mensagem: string = '';
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.carregarPendentes();
@@ -23,11 +26,9 @@ export class PainelUsuariosComponent implements OnInit {
   carregarPendentes(): void {
     this.usuarioService.listarPendentes().subscribe({
       next: (dados) => {
-        // Nosso espião para confirmar que o Angular pegou o pacote:
         console.log('👀 Dados recebidos do Java:', dados); 
-        
-        // Atualiza a tela
         this.usuariosPendentes = dados;
+        this.cdr.detectChanges(); // <--- A Mágica acontece aqui
       },
       error: (err) => {
         console.error('Erro ao buscar fila de espera', err);
