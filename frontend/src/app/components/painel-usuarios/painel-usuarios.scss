@@ -1,0 +1,106 @@
+/* Container principal estilo cartão */
+.container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* Textos do cabeçalho */
+h2 {
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: #6c757d;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+/* Estilização da Tabela */
+.table {
+  vertical-align: middle;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  thead {
+    th {
+      background-color: #f8f9fa;
+      color: #495057;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #dee2e6;
+      padding: 1rem;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f1f3f5;
+      }
+    }
+    
+    td {
+      padding: 1rem;
+      color: #333333;
+      border-bottom: 1px solid #e9ecef;
+    }
+  }
+}
+
+/* Emblema (Badge) do nível de acesso */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Botão de Aprovação */
+.btn-success {
+  background-color: #198754;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(25, 135, 84, 0.3);
+
+  &:hover {
+    background-color: #157347;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.4);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Alertas */
+.alert {
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  
+  &-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+  }
+  
+  &-info {
+    background-color: #cff4fc;
+    color: #055160;
+    text-align: center;
+    padding: 1.5rem;
+  }
+}
