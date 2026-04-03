@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common'; // <--- Importação obrigatória
 import { UsuarioService } from '../../services/usuario';
-// Se você usa Angular 17+ com Standalone, não esqueça de importar o CommonModule (ngIf, ngFor) aqui no topo se precisar!
 
 @Component({
   selector: 'app-painel-usuarios',
+  standalone: true, // <--- A MÁGICA ESTÁ AQUI!
+  imports: [CommonModule], // <--- E AQUI!
   templateUrl: './painel-usuarios.html',
-  styleUrls: ['./painel-usuarios.scss']
+  styleUrl: './painel-usuarios.scss' // Correção: no Angular 17 é styleUrl no singular
 })
 export class PainelUsuariosComponent implements OnInit {
 
@@ -21,6 +23,10 @@ export class PainelUsuariosComponent implements OnInit {
   carregarPendentes(): void {
     this.usuarioService.listarPendentes().subscribe({
       next: (dados) => {
+        // Nosso espião para confirmar que o Angular pegou o pacote:
+        console.log('👀 Dados recebidos do Java:', dados); 
+        
+        // Atualiza a tela
         this.usuariosPendentes = dados;
       },
       error: (err) => {
@@ -34,10 +40,7 @@ export class PainelUsuariosComponent implements OnInit {
       this.usuarioService.aprovar(id).subscribe({
         next: () => {
           this.mensagem = `Usuário ${nome} aprovado com sucesso!`;
-          // Recarrega a lista para sumir com o usuário recém-aprovado
           this.carregarPendentes(); 
-          
-          // Apaga a mensagem de sucesso depois de 3 segundos
           setTimeout(() => this.mensagem = '', 3000);
         },
         error: (err) => {
@@ -48,4 +51,3 @@ export class PainelUsuariosComponent implements OnInit {
     }
   }
 }
-// Teste para forçar o Vercel a rodar
