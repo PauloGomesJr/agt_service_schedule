@@ -1,0 +1,36 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h3 class="card-title text-center mb-4">Solicitar Acesso</h3>
+          
+          @if (mensagem) {
+            <div class="alert alert-success text-center">{{ mensagem }}</div>
+          }
+          @if (erro) {
+            <div class="alert alert-danger text-center">{{ erro }}</div>
+          }
+
+          <form (ngSubmit)="solicitarCadastro()">
+            <div class="mb-3">
+              <label class="form-label">Crie um nome de usuário</label>
+              <input type="text" class="form-control" name="login" [(ngModel)]="login" required placeholder="Ex: joao.silva">
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label">Crie uma senha</label>
+              <input type="password" class="form-control" name="senha" [(ngModel)]="senha" required>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="!login || !senha">Cadastrar</button>
+              <a routerLink="/login" class="btn btn-link text-decoration-none">Voltar para o Login</a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

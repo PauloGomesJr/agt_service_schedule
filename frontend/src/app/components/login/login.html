@@ -43,7 +43,9 @@
       <button type="submit" class="btn-login" [disabled]="carregando">
         {{ carregando ? 'Autenticando...' : 'Entrar' }}
       </button>
-
+      <div class="mt-3 text-center">
+         <p>Ainda não tem acesso? <a routerLink="/registro">Solicite sua conta aqui</a></p>
+     </div>
     </form>
   </div>
 </div>

@@ -77,4 +77,11 @@ export class AuthService {
     return JSON.stringify(role).toUpperCase().includes('ADMIN');
   }
 
+  // Dentro da sua classe AuthService...
+
+  registrar(usuario: any): Observable<any> {
+    // Aponta para a rota pública do seu backend
+    return this.http.post('https://agt-service-schedule.onrender.com/auth/registrar', usuario);
+  }
+
 }
