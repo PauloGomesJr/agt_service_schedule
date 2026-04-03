@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms'; // Necessário para pegar os dados
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.html',
+  styleUrl: './registro.scss',
   standalone: true,
   imports: [FormsModule, RouterModule] // Importando módulos essenciais do Angular 17+
 })
