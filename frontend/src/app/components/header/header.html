@@ -8,6 +8,7 @@
     <a routerLink="/escala" routerLinkActive="active-link" class="nav-link">Escalas</a>
     @if (isAdmin) {
       <a routerLink="/servidores" routerLinkActive="active-link" class="nav-link">Servidores</a>
+      <a routerLink="/determinacoes" routerLinkActive="active-link" class="nav-link">Determinações de Serviço</a>
       <a routerLink="/config" routerLinkActive="active-link" class="nav-link">Configurações</a>
       <a routerLink="/painel-usuarios" routerLinkActive="active-link" class="nav-link">Aprovações</a>
     }
@@ -18,3 +19,4 @@
     <button (click)="sair()" class="btn-logout">Sair 🚪</button>
   </div>
 </header>
+

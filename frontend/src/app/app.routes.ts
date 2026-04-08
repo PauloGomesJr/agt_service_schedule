@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { EscalaMensalComponent } from './components/escala-mensal/escala-mensal';
 import { TiposServicoComponent } from './components/tipos-servico/tipos-servico';
 import { ServidoresComponent } from './components/servidores/servidores';
+import { PainelDeterminacoesComponent } from './components/painel-determinacoes/painel-determinacoes';
 
 // Novas importações de Segurança
 import { LoginComponent } from './components/login/login';
@@ -24,6 +25,12 @@ export const routes: Routes = [
   { path: 'escala', component: EscalaMensalComponent, canActivate: [authGuard] },
   { path: 'config', component: TiposServicoComponent, canActivate: [authGuard] },
   { path: 'servidores', component: ServidoresComponent, canActivate: [authGuard] },
+
+  { 
+    path: 'determinacoes', 
+    component: PainelDeterminacoesComponent, 
+    canActivate: [AdminGuard] 
+  },
   
   // 4. Rota Administrativa (A Mágica da Portaria)
   { path: 'painel-usuarios', component: PainelUsuariosComponent, canActivate: [AdminGuard] },

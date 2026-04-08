@@ -1,0 +1,46 @@
+.container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  margin-top: 2rem;
+}
+
+h2 { color: #2c3e50; font-weight: 700; }
+p { color: #6c757d; margin-bottom: 2rem; }
+
+.card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  
+  .card-title {
+    color: #495057;
+    font-weight: 600;
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555555;
+  font-size: 0.9rem;
+}
+
+.custom-table {
+  margin-top: 1.5rem;
+  
+  thead th {
+    background-color: #f1f3f5;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+}

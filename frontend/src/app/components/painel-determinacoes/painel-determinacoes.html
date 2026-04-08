@@ -1,0 +1,65 @@
+<div class="container mt-4">
+  <h2>Gestão de Determinações de Serviço</h2>
+  <p>Registre instruções operacionais e vincule-as às escalas existentes.</p>
+
+  @if (mensagem) { <div class="alert alert-success">{{ mensagem }}</div> }
+  @if (erro) { <div class="alert alert-danger">{{ erro }}</div> }
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Nova Determinação</h5>
+      
+      <div class="row g-3">
+        <div class="col-md-2">
+          <label class="form-label">ID da Escala *</label>
+          <input type="number" class="form-control" [(ngModel)]="novaDeterminacao.escalaId" placeholder="Ex: 105">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Área (MT, PT, PO) *</label>
+          <input type="text" class="form-control" [(ngModel)]="novaDeterminacao.areaAtuacao" placeholder="Ex: MT01">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Setor / Local</label>
+          <input type="text" class="form-control" [(ngModel)]="novaDeterminacao.setor" placeholder="Ex: 5 ou NA">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Ação</label>
+          <button class="btn btn-primary w-100 mt-4" (click)="salvarDeterminacao()">+ Adicionar Determinação</button>
+        </div>
+        <div class="col-12 mt-2">
+          <label class="form-label">Instruções Operacionais *</label>
+          <textarea class="form-control" rows="2" [(ngModel)]="novaDeterminacao.instrucoes" placeholder="Ex: Fazer rondas no centro e impedir filas duplas..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (determinacoes.length > 0) {
+    <table class="table table-striped custom-table">
+      <thead>
+        <tr>
+          <th>Escala ID</th>
+          <th>Área</th>
+          <th>Setor</th>
+          <th>Instrução</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (det of determinacoes; track det.id) {
+          <tr>
+            <td><strong>#{{ det.escala.id }}</strong></td>
+            <td><span class="badge bg-dark">{{ det.areaAtuacao }}</span></td>
+            <td>{{ det.setor }}</td>
+            <td>{{ det.instrucoes }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-danger" (click)="excluirDeterminacao(det.id!)">Excluir</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <div class="alert alert-info">Nenhuma determinação cadastrada.</div>
+  }
+</div>
