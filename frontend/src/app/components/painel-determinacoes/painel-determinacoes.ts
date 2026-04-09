@@ -9,7 +9,7 @@ import { Determinacao } from '../../models/determinacao';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './painel-determinacoes.html',
-  styleUrl: './painel-determinacoes.scss'
+  styleUrls: ['./painel-determinacoes.scss'] // <--- PLURAL E COM COLCHETES!
 })
 export class PainelDeterminacoesComponent implements OnInit {
 
