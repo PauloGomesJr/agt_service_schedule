@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 import { EscalaMensalComponent } from './components/escala-mensal/escala-mensal';
 import { TiposServicoComponent } from './components/tipos-servico/tipos-servico';
 import { ServidoresComponent } from './components/servidores/servidores';
-import { PainelDeterminacoesComponent } from './components/painel-determinacoes/painel-determinacoes';
+import { PainelDeterminacoes } from './components/painel-determinacoes/painel-determinacoes';
 
 // Novas importações de Segurança
 import { LoginComponent } from './components/login/login';
@@ -28,7 +28,7 @@ export const routes: Routes = [
 
   { 
     path: 'determinacoes', 
-    component: PainelDeterminacoesComponent, 
+    component: PainelDeterminacoes, 
     canActivate: [AdminGuard] 
   },
   
@@ -38,3 +38,4 @@ export const routes: Routes = [
   // 5. A Rota Curinga DEVE ser sempre a última! Se digitar URL maluca, volta pro Login
   { path: '**', redirectTo: 'login' }
 ];
+

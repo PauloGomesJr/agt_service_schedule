@@ -1,17 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necessário para o formulário
+import { FormsModule } from '@angular/forms';
 import { DeterminacaoService } from '../../services/determinacao.service';
 import { Determinacao } from '../../models/determinacao';
 
 @Component({
   selector: 'app-painel-determinacoes',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule], // Injetamos os módulos de tela e formulário aqui
   templateUrl: './painel-determinacoes.html',
-  styleUrls: ['./painel-determinacoes.scss'] // <--- PLURAL E COM COLCHETES!
+  styleUrl: './painel-determinacoes.scss', // Mantido no singular exatamente como o CLI gerou!
 })
-export class PainelDeterminacoesComponent implements OnInit {
+export class PainelDeterminacoes implements OnInit {
 
   determinacoes: Determinacao[] = [];
   mensagem: string = '';
