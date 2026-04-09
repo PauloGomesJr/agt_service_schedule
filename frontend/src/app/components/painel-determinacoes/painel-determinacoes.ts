@@ -6,10 +6,12 @@ import { Determinacao } from '../../models/determinacao';
 
 @Component({
   selector: 'app-painel-determinacoes',
-  imports: [CommonModule, FormsModule], // Injetamos os módulos de tela e formulário aqui
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './painel-determinacoes.html',
-  styleUrl: './painel-determinacoes.scss', // Mantido no singular exatamente como o CLI gerou!
+  styleUrl: './painel-determinacoes.scss' // De volta à elegância!
 })
+
 export class PainelDeterminacoes implements OnInit {
 
   determinacoes: Determinacao[] = [];
