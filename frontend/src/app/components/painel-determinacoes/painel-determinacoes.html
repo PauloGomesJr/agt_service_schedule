@@ -8,24 +8,34 @@
   <div class="card mb-4">
     <div class="card-body">
       <h5 class="card-title mb-3">Nova Determinação</h5>
-      
-      <div class="row g-3">
-        <div class="col-md-2">
-          <label class="form-label">ID da Escala *</label>
-          <input type="number" class="form-control" [(ngModel)]="novaDeterminacao.escalaId" placeholder="Ex: 105">
+     <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Selecione a Escala (Data - Agente - Turno) *</label>
+          <select class="form-select" [(ngModel)]="novaDeterminacao.escalaId">
+            <option [ngValue]="null">Clique para selecionar...</option>
+            
+            @for (escala of escalasDisponiveis; track escala.id) {
+              <option [ngValue]="escala.id">
+                Dia {{ escala.data | date:'dd/MM/yyyy' }} - {{ escala.servidor.nome }} (Turno: {{ escala.tipoServico.codigo }})
+              </option>
+            }
+          </select>
         </div>
-        <div class="col-md-3">
-          <label class="form-label">Área (MT, PT, PO) *</label>
+
+        <div class="col-md-2">
+          <label class="form-label">Área (MT, PT) *</label>
           <input type="text" class="form-control" [(ngModel)]="novaDeterminacao.areaAtuacao" placeholder="Ex: MT01">
         </div>
-        <div class="col-md-3">
+
+        <div class="col-md-2">
           <label class="form-label">Setor / Local</label>
           <input type="text" class="form-control" [(ngModel)]="novaDeterminacao.setor" placeholder="Ex: 5 ou NA">
         </div>
+
         <div class="col-md-4">
-          <label class="form-label">Ação</label>
-          <button class="btn btn-primary w-100 mt-4" (click)="salvarDeterminacao()">+ Adicionar Determinação</button>
+          <label class="form-label d-block">&nbsp;</label> <button class="btn btn-primary w-100" (click)="salvarDeterminacao()">+ Adicionar Determinação</button>
         </div>
+
         <div class="col-12 mt-2">
           <label class="form-label">Instruções Operacionais *</label>
           <textarea class="form-control" rows="2" [(ngModel)]="novaDeterminacao.instrucoes" placeholder="Ex: Fazer rondas no centro e impedir filas duplas..."></textarea>
