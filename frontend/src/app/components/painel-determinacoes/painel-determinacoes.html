@@ -8,13 +8,14 @@
   <div class="card mb-4">
     <div class="card-body">
       <h5 class="card-title mb-3">Nova Determinação</h5>
-     <div class="row g-3">
+      <div class="row g-3">
+        
         <div class="col-md-4">
           <label class="form-label">Selecione a Escala (Data - Agente - Turno) *</label>
-          <select class="form-select" [(ngModel)]="novaDeterminacao.escalaId">
+          <select class="form-select" [(ngModel)]="novaDeterminacao.escalaId" (ngModelChange)="verificarEquipeDoTurno()">
             <option [ngValue]="null">Clique para selecionar...</option>
             
-            @for (escala of escalasDisponiveis; track escala.id) {
+            @for (escala of escalasNaoAtribuidas; track escala.id) {
               <option [ngValue]="escala.id">
                 Dia {{ escala.data | date:'dd/MM/yyyy' }} - {{ escala.servidor.nome }} (Turno: {{ escala.tipoServico.codigo }})
               </option>
@@ -33,7 +34,8 @@
         </div>
 
         <div class="col-md-4">
-          <label class="form-label d-block">&nbsp;</label> <button class="btn btn-primary w-100" (click)="salvarDeterminacao()">+ Adicionar Determinação</button>
+          <label class="form-label d-block">&nbsp;</label> 
+          <button class="btn btn-primary w-100" (click)="salvarDeterminacao()">+ Adicionar Determinação</button>
         </div>
 
         <div class="col-12 mt-2">
