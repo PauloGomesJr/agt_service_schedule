@@ -63,7 +63,13 @@
             <td>{{ det.setor }}</td>
             <td>{{ det.instrucoes }}</td>
             <td>
-              <button class="btn btn-sm btn-outline-danger" (click)="excluirDeterminacao(det.id!)">Excluir</button>
+              <button class="btn btn-sm btn-outline-primary me-2" title="Reaproveitar esta instrução" (click)="prepararCopia(det)">
+                Copiar
+              </button>
+              
+              <button class="btn btn-sm btn-outline-danger" title="Apagar" (click)="excluirDeterminacao(det.id!)">
+                Excluir
+              </button>
             </td>
           </tr>
         }

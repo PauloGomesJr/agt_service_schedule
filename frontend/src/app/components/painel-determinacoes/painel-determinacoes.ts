@@ -76,6 +76,23 @@ export class PainelDeterminacoes implements OnInit {
     });
   }
 
+  prepararCopia(det: Determinacao): void {
+    // 1. Copia os dados, mas força o usuário a escolher uma nova Escala (deixa null)
+    this.novaDeterminacao = {
+      escalaId: null, 
+      areaAtuacao: det.areaAtuacao,
+      setor: det.setor,
+      instrucoes: det.instrucoes
+    };
+
+    // 2. Dá um feedback visual rápido
+    this.mensagem = 'Instrução copiada! Selecione a nova escala para o próximo agente e salve.';
+    setTimeout(() => this.mensagem = '', 4000);
+
+    // 3. Rola a tela suavemente de volta para o topo (para o formulário)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   excluirDeterminacao(id: number): void {
     if (confirm('Tem certeza que deseja apagar esta determinação?')) {
       this.determinacaoService.deletar(id).subscribe({
