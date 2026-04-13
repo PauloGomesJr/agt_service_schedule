@@ -7,11 +7,13 @@ import { HeaderComponent } from '../header/header';
 import { ServidorService } from '../../services/servidor.service'; 
 import { TipoServicoService } from '../../services/tipo-servico';
 import { EscalaService } from '../../services/escala';
+import { DeterminacaoService } from '../../services/determinacao.service'; // <-- ADICIONADO
 
 // Models
 import { Servidor } from '../../models/servidor.model';
 import { TipoServico } from '../../models/tipo-servico.model';
 import { Escala, EscalaDTO } from '../../models/escala.model';
+import { Determinacao } from '../../models/determinacao'; // <-- ADICIONADO
 
 // === IMPORTAÇÕES PARA O PDF E ALERTAS ===
 import jsPDF from 'jspdf';
@@ -30,9 +32,8 @@ export class EscalaMensalComponent implements OnInit {
   // Dados do Banco
   servidores: Servidor[] = [];
   tiposServico: TipoServico[] = [];
-  
-  // Lista original
   escalas: Escala[] = []; 
+  determinacoes: Determinacao[] = []; // <-- ADICIONADO PARA O PDF
   
   // Mapa visual
   mapaEscalas: any = {}; 
@@ -61,6 +62,7 @@ export class EscalaMensalComponent implements OnInit {
     private servidorService: ServidorService,
     private tipoServicoService: TipoServicoService,
     private escalaService: EscalaService,
+    private determinacaoService: DeterminacaoService, // <-- INJETADO
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -117,6 +119,12 @@ export class EscalaMensalComponent implements OnInit {
       this.escalas = dados;
       this.atualizarMapaVisualizacao();
       this.cdr.detectChanges();
+    });
+
+    // BUSCA AS DETERMINAÇÕES PARA DEIXAR PRONTO PARA O PDF
+    this.determinacaoService.listarTodas().subscribe({
+      next: (dados: any) => this.determinacoes = dados,
+      error: (err: any) => console.error('Erro ao buscar determinações para o PDF', err)
     });
   }
 
@@ -188,13 +196,12 @@ export class EscalaMensalComponent implements OnInit {
       nomeServidor: servidor.nome,
       data: data,
       tipoServicoId: null,
-      determinacao: '' // <--- Campo zerado ao abrir para novo plantão
+      determinacao: '' 
     };
     
     if (escalaExistente) {
       this.escalaSelecionada.id = escalaExistente.id; 
       this.escalaSelecionada.tipoServicoId = escalaExistente.tipoServico.id;
-      // Carrega a determinação se ela existir no banco
       this.escalaSelecionada.determinacao = escalaExistente.determinacao || ''; 
     }
     this.modalAberto = true;
@@ -206,11 +213,7 @@ export class EscalaMensalComponent implements OnInit {
 
   salvarEscala() {
     if (!this.escalaSelecionada.tipoServicoId) {
-      Swal.fire({
-        text: 'Por favor, selecione um turno para este plantão.',
-        icon: 'warning',
-        confirmButtonColor: '#f39c12'
-      });
+      Swal.fire({ text: 'Por favor, selecione um turno para este plantão.', icon: 'warning', confirmButtonColor: '#f39c12' });
       return;
     }
 
@@ -226,28 +229,15 @@ export class EscalaMensalComponent implements OnInit {
 
     this.escalaService.salvar(dto).subscribe({
       next: (novaEscala) => {
-        this.escalas = this.escalas.filter(e => 
-          !(e.servidor.id === novaEscala.servidor.id && e.data === novaEscala.data)
-        );
+        this.escalas = this.escalas.filter(e => !(e.servidor.id === novaEscala.servidor.id && e.data === novaEscala.data));
         this.escalas.push(novaEscala);
         this.atualizarMapaVisualizacao();
         this.cdr.detectChanges(); 
         this.fecharModal();
-        
-        // Alerta discreto de sucesso (opcional)
-        // Swal.fire({ title: 'Salvo!', icon: 'success', timer: 1000, showConfirmButton: false });
       },
       error: (err) => {
-        let mensagem = 'Erro ao salvar escala.';
-        if (err.error && err.error.message) mensagem = err.error.message;
-        else if (err.error && typeof err.error === 'string') mensagem = err.error;
-
-        Swal.fire({
-          title: 'Bloqueado!',
-          text: mensagem,
-          icon: 'error',
-          confirmButtonColor: '#e74c3c'
-        });
+        let mensagem = err.error?.message || err.error || 'Erro ao salvar escala.';
+        Swal.fire({ title: 'Bloqueado!', text: mensagem, icon: 'error', confirmButtonColor: '#e74c3c' });
       }
     });
   }
@@ -256,14 +246,8 @@ export class EscalaMensalComponent implements OnInit {
     if (!this.escalaSelecionada.id) return;
 
     Swal.fire({
-      title: 'Remover plantão?',
-      text: "Esta ação não pode ser desfeita.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sim, remover!',
-      cancelButtonText: 'Cancelar'
+      title: 'Remover plantão?', text: "Esta ação não pode ser desfeita.", icon: 'warning', showCancelButton: true,
+      confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Sim, remover!', cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.escalaService.excluir(this.escalaSelecionada.id).subscribe({
@@ -272,12 +256,9 @@ export class EscalaMensalComponent implements OnInit {
             this.fecharModal(); 
             this.atualizarMapaVisualizacao();
             this.cdr.detectChanges();
-            
             Swal.fire('Removido!', 'O plantão foi excluído.', 'success');
           },
-          error: (err) => {
-            Swal.fire('Erro!', 'Não foi possível excluir o plantão.', 'error');
-          }
+          error: (err) => Swal.fire('Erro!', 'Não foi possível excluir o plantão.', 'error')
         });
       }
     });
@@ -301,36 +282,26 @@ export class EscalaMensalComponent implements OnInit {
     Swal.fire({
       title: 'Confirmar Troca?',
       html: `Deseja permutar os plantões entre:<br><br><b>${this.escalaOrigemPermuta.nomeServidor}</b> (${dataOrigemStr})<br><b>${nomeDestino}</b> (${dataDestStr})`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#27ae60',
-      cancelButtonColor: '#95a5a6',
-      confirmButtonText: 'Sim, permutar!',
-      cancelButtonText: 'Cancelar'
+      icon: 'question', showCancelButton: true, confirmButtonColor: '#27ae60', cancelButtonColor: '#95a5a6',
+      confirmButtonText: 'Sim, permutar!', cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.escalaService.permutar(this.escalaOrigemPermuta.id, destinoId).subscribe({
           next: () => {
             const esc1 = this.escalas.find(e => e.id === this.escalaOrigemPermuta.id);
             const esc2 = this.escalas.find(e => e.id === destinoId);
-            
             if (esc1 && esc2) {
                 const tempServidor = esc1.servidor;
                 esc1.servidor = esc2.servidor;
                 esc2.servidor = tempServidor;
             }
-
             this.cancelarPermuta();
             this.atualizarMapaVisualizacao();
             this.cdr.detectChanges();
-            
             Swal.fire('Sucesso!', 'Permuta realizada com sucesso!', 'success');
           },
           error: (err) => {
-            let mensagem = 'Erro interno ao realizar permuta.';
-            if (err && err.error && err.error.message) mensagem = err.error.message;
-            else if (err && err.error && typeof err.error === 'string') mensagem = err.error;
-            
+            let mensagem = err?.error?.message || err?.error || 'Erro interno ao realizar permuta.';
             Swal.fire('Permuta Recusada', mensagem, 'error');
             this.cancelarPermuta();
           }
@@ -347,35 +318,22 @@ export class EscalaMensalComponent implements OnInit {
 
     autoTable(doc, {
       html: '#tabela-escala',
-      startY: 25,
-      theme: 'grid',
-      styles: {
-        fontSize: 7,
-        cellPadding: 1,
-        halign: 'center',
-        valign: 'middle'
-      },
-      headStyles: {
-        fillColor: [52, 73, 94],
-        textColor: 255
-      },
+      startY: 25, theme: 'grid',
+      styles: { fontSize: 7, cellPadding: 1, halign: 'center', valign: 'middle' },
+      headStyles: { fillColor: [52, 73, 94], textColor: 255 },
       didParseCell: (data) => {
         const texto = data.cell.text.join('');
         if (data.section === 'body' && data.column.index > 0) {
-            if (texto.includes('F')) {
-                data.cell.styles.fillColor = [255, 235, 59];
-            } else if (texto.includes('C')) {
-                data.cell.styles.fillColor = [41, 128, 185];
-                data.cell.styles.textColor = 255;
-            } else if (texto.includes('A')) {
-                data.cell.styles.fillColor = [46, 204, 113];
-            }
+            if (texto.includes('F')) data.cell.styles.fillColor = [255, 235, 59];
+            else if (texto.includes('C')) { data.cell.styles.fillColor = [41, 128, 185]; data.cell.styles.textColor = 255; } 
+            else if (texto.includes('A')) data.cell.styles.fillColor = [46, 204, 113];
         }
       }
     });
     doc.save(`Escala_${mesFormatado}.pdf`);
   }
 
+  // === FLUXO ATUALIZADO DO PDF SEMANAL ===
   gerarPDFSemanal() {
     if (!this.dataInicioSemana) {
         Swal.fire('Atenção', 'Por favor, escolha uma data de início no calendário.', 'info');
@@ -385,24 +343,41 @@ export class EscalaMensalComponent implements OnInit {
     const partes = this.dataInicioSemana.split('-');
     const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
 
-    // Lógica para data diferente de Sábado com SweetAlert2
     if (dataInicio.getDay() !== 6) { 
         Swal.fire({
           title: 'Data diferente de Sábado',
           text: 'Deseja gerar os 7 dias a partir deste dia mesmo assim?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Sim, gerar!',
-          cancelButtonText: 'Não, cancelar'
+          icon: 'question', showCancelButton: true, confirmButtonText: 'Sim, gerar!', cancelButtonText: 'Não, cancelar'
         }).then((res) => {
-          if (res.isConfirmed) this.processarGeracaoSemanal(dataInicio);
+          if (res.isConfirmed) this.perguntarSobreDeterminacoes(dataInicio);
         });
     } else {
-        this.processarGeracaoSemanal(dataInicio);
+        this.perguntarSobreDeterminacoes(dataInicio);
     }
   }
 
-  private processarGeracaoSemanal(dataInicio: Date) {
+  private perguntarSobreDeterminacoes(dataInicio: Date) {
+    Swal.fire({
+      title: 'Determinações Operacionais',
+      text: 'Deseja anexar uma segunda página neste PDF contendo as instruções de cada agente?',
+      icon: 'question',
+      showCancelButton: true,
+      showDenyButton: true,
+      confirmButtonColor: '#8e44ad',
+      denyButtonColor: '#34495e',
+      confirmButtonText: 'Sim, incluir',
+      denyButtonText: 'Não, apenas Escala',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.processarGeracaoSemanal(dataInicio, true);
+      } else if (result.isDenied) {
+        this.processarGeracaoSemanal(dataInicio, false);
+      }
+    });
+  }
+
+  private processarGeracaoSemanal(dataInicio: Date, incluirDeterminacoes: boolean) {
     const doc = new jsPDF('p', 'mm', 'a4');
     const diasDaSemana: Date[] = [];
     for (let j = 0; j < 7; j++) {
@@ -414,6 +389,7 @@ export class EscalaMensalComponent implements OnInit {
     const inicioStr = diasDaSemana[0].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const fimStr = diasDaSemana[6].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     
+    // --- PÁGINA 1: A GRADE DE ESCALAS ---
     doc.setFontSize(14);
     doc.text(`Escala Semanal: ${inicioStr} a ${fimStr}`, 105, 20, { align: 'center' });
 
@@ -432,10 +408,7 @@ export class EscalaMensalComponent implements OnInit {
     });
 
     autoTable(doc, {
-        startY: 30,
-        head: [headRow],
-        body: bodyRows,
-        theme: 'grid',
+        startY: 30, head: [headRow], body: bodyRows, theme: 'grid',
         styles: { fontSize: 9, cellPadding: 3, halign: 'center', valign: 'middle' },
         headStyles: { fillColor: [44, 62, 80], textColor: 255, fontStyle: 'bold' },
         columnStyles: { 0: { halign: 'left', fontStyle: 'bold', cellWidth: 40 } },
@@ -444,13 +417,78 @@ export class EscalaMensalComponent implements OnInit {
                 let texto = data.cell.text.join('');
                 if (texto.includes('F')) data.cell.styles.fillColor = [255, 235, 59];
                 else if (texto.includes('C') || texto.includes('W')) {
-                    data.cell.styles.fillColor = [41, 128, 185];
-                    data.cell.styles.textColor = 255;
+                    data.cell.styles.fillColor = [41, 128, 185]; data.cell.styles.textColor = 255;
                 } else if (texto.includes('A')) data.cell.styles.fillColor = [46, 204, 113];
                 else if (texto.includes('B')) data.cell.styles.fillColor = [230, 126, 34];
             }
         }
     });
+
+    // --- PÁGINA 2: AS DETERMINAÇÕES (SE O USUÁRIO PEDIU) ---
+    if (incluirDeterminacoes) {
+        doc.addPage(); // Cria uma folha nova!
+        doc.setFontSize(14);
+        doc.text(`Determinações Operacionais: ${inicioStr} a ${fimStr}`, 105, 20, { align: 'center' });
+
+        // Coleta todas as escalas que caem nesta semana exata
+        const datasSemanaStr = diasDaSemana.map(d => d.toLocaleDateString('en-CA'));
+        const escalasDaSemana = this.escalas.filter(e => datasSemanaStr.includes(e.data));
+
+        // Filtra as determinações para exibir apenas as que pertencem aos plantões desta semana
+        const determinacoesDaSemana = this.determinacoes.filter(det => 
+            escalasDaSemana.some(e => e.id === det.escala.id)
+        );
+
+        // Organiza a lista por Data, e depois por Turno
+        determinacoesDaSemana.sort((a, b) => {
+             const dataA = a.escala.data || '';
+             const dataB = b.escala.data || '';
+             if (dataA !== dataB) return dataA.localeCompare(dataB);
+             const turnoA = a.escala.tipoServico?.codigo || '';
+             const turnoB = b.escala.tipoServico?.codigo || '';
+             return turnoA.localeCompare(turnoB);
+        });
+
+        // Monta as linhas da Tabela de Instruções
+       // Monta as linhas da Tabela de Instruções
+        const bodyDet = determinacoesDaSemana.map(det => {
+            // O ': any' diz ao TypeScript para não inspecionar o formato desse objeto estritamente
+            const esc: any = escalasDaSemana.find(e => e.id === det.escala.id) || det.escala;
+            
+            // Travas de segurança para evitar erro de "undefined"
+            const dataStr = esc.data || '';
+            const partes = dataStr.split('-');
+            const dataBr = partes.length === 3 ? `${partes[2]}/${partes[1]}` : '-'; // Ex: 09/04
+            
+            const turno = esc.tipoServico?.codigo || '';
+            
+            // O símbolo '?.' protege o código caso o servidor venha nulo
+            const agente = esc.servidor?.nomeGuerra || esc.servidor?.nome?.split(' ')[0] || '-';
+
+            return [
+                dataBr, turno, agente, det.areaAtuacao, (det.setor || '-'), det.instrucoes
+            ];
+        });
+
+        if (bodyDet.length > 0) {
+            autoTable(doc, {
+                startY: 30,
+                head: [['Data', 'Turno', 'Agente', 'Área', 'Setor', 'Instrução Operacional']],
+                body: bodyDet,
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 3, halign: 'center', valign: 'middle' },
+                headStyles: { fillColor: [142, 68, 173], textColor: 255, fontStyle: 'bold' }, // Cabeçalho Roxo
+                columnStyles: {
+                    2: { halign: 'left', fontStyle: 'bold', cellWidth: 35 }, // Coluna Agente
+                    5: { halign: 'left', cellWidth: 80 } // Coluna Instrução (Mais larga para o texto caber bem)
+                }
+            });
+        } else {
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text("Nenhuma determinação cadastrada para as equipes desta semana.", 105, 40, { align: 'center' });
+        }
+    }
 
     const nomeArquivo = `Escala_Semanal_${inicioStr.replace(/\//g, '-')}.pdf`;
     doc.save(nomeArquivo);
