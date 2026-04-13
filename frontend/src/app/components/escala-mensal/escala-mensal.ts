@@ -348,17 +348,8 @@ export class EscalaMensalComponent implements OnInit {
     const partes = this.dataInicioSemana.split('-');
     const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
 
-    if (dataInicio.getDay() !== 6) { 
-        Swal.fire({
-          title: 'Data diferente de Sábado',
-          text: 'Deseja gerar os 7 dias a partir deste dia mesmo assim?',
-          icon: 'question', showCancelButton: true, confirmButtonText: 'Sim, gerar!', cancelButtonText: 'Não, cancelar'
-        }).then((res) => {
-          if (res.isConfirmed) this.perguntarSobreDeterminacoes(dataInicio);
-        });
-    } else {
-        this.perguntarSobreDeterminacoes(dataInicio);
-    }
+    // Removemos a trava do sábado! Agora ele pula direto para perguntar sobre as determinações
+    this.perguntarSobreDeterminacoes(dataInicio);
   }
 
   private perguntarSobreDeterminacoes(dataInicio: Date) {
