@@ -348,7 +348,6 @@ export class EscalaMensalComponent implements OnInit {
     const partes = this.dataInicioSemana.split('-');
     const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
 
-    // Removemos a trava do sábado! Agora ele pula direto para perguntar sobre as determinações
     this.perguntarSobreDeterminacoes(dataInicio);
   }
 
@@ -488,6 +487,116 @@ export class EscalaMensalComponent implements OnInit {
 
     const nomeArquivo = `Escala_Semanal_${inicioStr.replace(/\//g, '-')}.pdf`;
     doc.save(nomeArquivo);
+  }
+
+  // === NOVO RELATÓRIO: FISCAL DE POSTURA (AGRUPADO) ===
+  gerarPDFFiscalizacao() {
+    if (!this.dataInicioSemana) {
+        Swal.fire('Atenção', 'Por favor, escolha uma data de início no calendário para gerar o relatório do fiscal.', 'info');
+        return;
+    }
+
+    const partes = this.dataInicioSemana.split('-');
+    const dataInicio = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+
+    // 1. Define os 7 dias do relatório
+    const diasDaSemana: Date[] = [];
+    for (let j = 0; j < 7; j++) {
+        const dia = new Date(dataInicio);
+        dia.setDate(dataInicio.getDate() + j);
+        diasDaSemana.push(dia);
+    }
+    const datasSemanaStr = diasDaSemana.map(d => d.toLocaleDateString('en-CA'));
+
+    // 2. Filtra escalas e determinações apenas para esta semana
+    const escalasDaSemana = this.escalas.filter(e => datasSemanaStr.includes(e.data));
+    const determinacoesDaSemana = this.determinacoes.filter(det =>
+        escalasDaSemana.some(e => e.id === det.escala.id)
+    );
+
+    // 3. A MÁGICA: Agrupamento por Chave Composta
+    const mapaAgrupamento = new Map<string, any>();
+
+    determinacoesDaSemana.forEach(det => {
+        const esc: any = escalasDaSemana.find(e => e.id === det.escala.id) || det.escala;
+        const dataStr = esc.data || '';
+        const agente = esc.servidor?.nomeGuerra || esc.servidor?.nome?.split(' ')[0] || '-';
+
+        const area = det.areaAtuacao || '-';
+        const setor = det.setor || '-';
+        const instrucao = det.instrucoes || '';
+
+        // Cria a chave única (Ex: "2026-04-12|MT02|25")
+        const chave = `${dataStr}|${area}|${setor}`;
+
+        if (mapaAgrupamento.has(chave)) {
+            // Se a equipe já existe, apenas adiciona o nome do agente com uma barra
+            mapaAgrupamento.get(chave).agentes.push(agente);
+        } else {
+            // Se for o primeiro da equipe, cria o registro
+            mapaAgrupamento.set(chave, {
+                dataOriginal: dataStr,
+                area: area,
+                setor: setor,
+                instrucao: instrucao,
+                agentes: [agente] // Inicia a lista de agentes
+            });
+        }
+    });
+
+    // 4. Converte o Mapa de volta para Array e Ordena (Data -> Área -> Setor)
+    const listaAgrupada = Array.from(mapaAgrupamento.values());
+    listaAgrupada.sort((a, b) => {
+        if (a.dataOriginal !== b.dataOriginal) return a.dataOriginal.localeCompare(b.dataOriginal);
+        if (a.area !== b.area) return a.area.localeCompare(b.area);
+        return a.setor.localeCompare(b.setor);
+    });
+
+    // 5. Gera o PDF em modo Paisagem ('l') para caber tudo folgado
+    const doc = new jsPDF('l', 'mm', 'a4');
+    const inicioStr = diasDaSemana[0].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const fimStr = diasDaSemana[6].toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    doc.setFontSize(16);
+    doc.text(`Relatório de Fiscalização e Atuação: ${inicioStr} a ${fimStr}`, 14, 20);
+
+    // Monta as linhas da tabela final
+    const bodyTable = listaAgrupada.map(item => {
+        const partesData = item.dataOriginal.split('-');
+        const dataBr = partesData.length === 3 ? `${partesData[2]}/${partesData[1]}/${partesData[0]}` : item.dataOriginal;
+
+        return [
+            dataBr,
+            item.area,
+            item.setor,
+            item.agentes.join(' / '), // Transforma o array ["Celdo", "Valdemir"] em "Celdo / Valdemir"
+            item.instrucao
+        ];
+    });
+
+    if (bodyTable.length > 0) {
+        autoTable(doc, {
+            startY: 30,
+            head: [['Data', 'Área', 'Setor', 'Equipe (Agentes)', 'Instrução Operacional']],
+            body: bodyTable,
+            theme: 'grid',
+            styles: { fontSize: 10, cellPadding: 3, valign: 'middle' },
+            headStyles: { fillColor: [211, 84, 0], textColor: 255, fontStyle: 'bold' }, // Laranja Escuro
+            columnStyles: {
+                0: { cellWidth: 25, halign: 'center' }, // Data
+                1: { cellWidth: 20, halign: 'center', fontStyle: 'bold' }, // Área
+                2: { cellWidth: 20, halign: 'center' }, // Setor
+                3: { cellWidth: 60, fontStyle: 'bold' }, // Equipe (Garante espaço para vários nomes)
+                4: { cellWidth: 'auto' } // Instrução preenche o resto
+            }
+        });
+    } else {
+        doc.setFontSize(12);
+        doc.setTextColor(100);
+        doc.text("Nenhuma instrução operacional encontrada para as equipes deste período.", 14, 40);
+    }
+
+    doc.save(`Fiscalizacao_Equipes_${inicioStr.replace(/\//g, '-')}.pdf`);
   }
   
   getTurno(servidor: any, dia: number): string {
