@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-
-// REMOVA O IMPORT DO ESCALA MENSAL AQUI DE CIMA (se tiver)
+import { RouterOutlet, RouterModule } from '@angular/router'; // 1. <-- RouterModule ADICIONADO AQUI!
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  // REMOVA O EscalaMensalComponent DESTA LISTA ABAIXO:
-  imports: [CommonModule, RouterOutlet], 
+  // 2. <-- RouterModule ADICIONADO NA LISTA ABAIXO:
+  imports: [CommonModule, RouterOutlet, RouterModule], 
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
