@@ -1,14 +1,57 @@
-<div style="font-family: sans-serif;">
+<div class="min-vh-100 bg-light">
   
-  <nav style="background: #333; padding: 15px; margin-bottom: 20px;">
-    <a routerLink="/escala" style="color: white; text-decoration: none; margin-right: 20px; font-weight: bold; cursor: pointer;">📅 Escala Mensal</a>
-    
-    <a routerLink="/determinacoes" style="color: white; text-decoration: none; margin-right: 20px; font-weight: bold; cursor: pointer;">📋 Determinações</a>
-    
-    <a routerLink="/painel-usuarios" style="color: white; text-decoration: none; font-weight: bold; cursor: pointer;">👥 Usuários</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-4">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand fw-bold d-flex align-items-center" routerLink="/escala">
+        <span class="me-2">🚦</span> AMMPLA ESCALAS
+      </a>
 
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/escala" routerLinkActive="active">
+              📅 Escala Mensal
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/determinacoes" routerLinkActive="active">
+              📋 Determinações
+            </a>
+          </li>
+        <!--
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/config" routerLinkActive="active">
+              ⚙️ Configuração
+            </a>
+          </li>
+        -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/painel-usuarios" routerLinkActive="active">
+              👥 Usuários
+            </a>
+          </li>
+
+        </ul>
+
+        <div class="d-flex">
+          <button class="btn btn-outline-light btn-sm fw-bold" routerLink="/login">
+            Sair
+          </button>
+        </div>
+
+      </div>
+    </div>
   </nav>
 
-  <router-outlet></router-outlet>
+  <main class="container-fluid px-4">
+    <router-outlet></router-outlet>
+  </main>
 
 </div>
