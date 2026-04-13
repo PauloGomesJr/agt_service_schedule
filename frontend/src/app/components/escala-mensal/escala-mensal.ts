@@ -310,7 +310,7 @@ export class EscalaMensalComponent implements OnInit {
     });
   }
 
-  gerarPDF() {
+ gerarPDF() {
     const doc = new jsPDF('l', 'mm', 'a4');
     const mesFormatado = this.getDataVisualizacao().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
     doc.setFontSize(18);
@@ -324,9 +324,14 @@ export class EscalaMensalComponent implements OnInit {
       didParseCell: (data) => {
         const texto = data.cell.text.join('');
         if (data.section === 'body' && data.column.index > 0) {
-            if (texto.includes('F')) data.cell.styles.fillColor = [255, 235, 59];
-            else if (texto.includes('C')) { data.cell.styles.fillColor = [41, 128, 185]; data.cell.styles.textColor = 255; } 
-            else if (texto.includes('A')) data.cell.styles.fillColor = [46, 204, 113];
+            if (texto.includes('F')) data.cell.styles.fillColor = [255, 235, 59]; // Folga: Amarelo
+            else if (texto.includes('C') || texto.includes('W')) { 
+                data.cell.styles.fillColor = [41, 128, 185]; // Noite: Azul Escuro
+                data.cell.styles.textColor = 255; 
+            } 
+            else if (texto.includes('A')) data.cell.styles.fillColor = [46, 204, 113]; // Manhã: Verde
+            // A MÁGICA ACONTECE AQUI: Adicionamos o turno B (Tarde) na cor Laranja!
+            else if (texto.includes('B')) data.cell.styles.fillColor = [230, 126, 34]; 
         }
       }
     });
