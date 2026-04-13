@@ -1,109 +1,44 @@
-/* Fundo escuro transparente */
-.modal-backdrop {
+/* Fundo escuro do Modal */
+.custom-modal-backdrop {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1050; /* Padrão Bootstrap para ficar acima de tudo */
 }
 
-.header-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background-color: #f8f9fa;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-
-  h2 {
-    margin: 0;
-    color: #2c3e50;
-    text-transform: capitalize; /* Garante inicial maiúscula */
-  }
+/* Colunas fixas (Nome na Esquerda e Total na Direita) */
+.sticky-left {
+  position: sticky;
+  left: 0;
+  background-color: #f8f9fa !important; /* Cor clara do Bootstrap */
+  z-index: 2;
+  box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
 }
 
-/* Botões de Navegação */
-.btn-nav {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-
-  &:hover {
-    background-color: #2980b9;
-  }
+.sticky-right {
+  position: sticky;
+  right: 0;
+  background-color: #f8f9fa !important;
+  z-index: 2;
+  box-shadow: -2px 0 5px -2px rgba(0,0,0,0.1);
 }
 
-
-/* A janela branca */
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-
-  h3 { margin-top: 0; color: #2c3e50; }
-  
-  .form-group {
-    margin: 15px 0;
-    label { display: block; margin-bottom: 5px; }
-    select { width: 100%; padding: 8px; }
-  }
-
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    
-    button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    
-    .btn-cancelar { background-color: #ccc; }
-    .btn-salvar { background-color: #27ae60; color: white; }
-  }
+/* Garante que o cabeçalho das colunas fixas não seja atropelado */
+th.sticky-left, th.sticky-right {
+  z-index: 3;
 }
 
-/* Efeito hover na célula da tabela para indicar que é clicável */
-td:hover {
-  background-color: #e8f6fd; /* Azulzinho claro */
-}
-
-/* Estilo para a coluna de Total de Horas */
-th:last-child, td:last-child {
-  border-left: 2px solid #bdc3c7; /* Uma borda mais grossa para separar */
-}
-
-/* Garante que o sticky funcione bem */
-td:last-child {
-  z-index: 1; /* Fica acima das células normais ao rolar */
-}
-
-th:last-child {
-  z-index: 3; /* Fica acima de tudo no cabeçalho */
-}
-
-/* Estilo base para qualquer turno */
+/* Estilo base do quadradinho de Turno */
 .turno-badge {
   display: inline-block;
   padding: 4px 8px;
-  border-radius: 6px; /* Bordas arredondadas */
+  border-radius: 6px; 
   font-weight: bold;
   font-size: 0.9rem;
-  min-width: 25px; /* Garante que letras finas fiquem centralizadas */
+  min-width: 25px; 
   text-align: center;
   box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
   cursor: pointer;
@@ -111,46 +46,12 @@ th:last-child {
 }
 
 .turno-badge:hover {
-  transform: scale(1.1); /* Efeito de zoom leve ao passar o mouse */
+  transform: scale(1.15); /* Efeito de destaque ao passar o mouse */
 }
 
-/* --- CORES ESPECÍFICAS --- */
-
-/* C - Plantão Noturno (Azul Escuro Profundo) */
-.turno-noite {
-  background-color: #2c3e50;
-  color: #ffffff;
-  border: 1px solid #1a252f;
-}
-
-/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
-.turno-manha {
-  background-color: #53f10f;
-  color: #333333; /* Texto escuro para contraste */
-  border: 1px solid #1ed40d;
-}
-
-
-/* A - Administrativo/Manhã (Amarelo/Laranja Suave) */
-.turno-tarde {
- background-color: #f1c40f;
-  color: #333333; /* Texto escuro para contraste */
-  border: 1px solid #d4ac0d;
-
-}
-
-
-/* F - Folga (Cinza Claro/Neutro) */
-.turno-folga {
-  background-color: #ffffff;
-  color: #fc0303;
-  border: 1px solid  #333;
-}
-
-/* Padrão (para turnos novos ou desconhecidos) */
-.turno-padrao {
-  background-color: #ecf0f1;
-  color: #333;
-  border: 1px solid #bdc3c7;
-
-}
+/* --- CORES ESPECÍFICAS DE NEGÓCIO --- */
+.turno-noite  { background-color: #2c3e50; color: #ffffff; border: 1px solid #1a252f; }
+.turno-manha  { background-color: #53f10f; color: #333333; border: 1px solid #1ed40d; }
+.turno-tarde  { background-color: #f1c40f; color: #333333; border: 1px solid #d4ac0d; }
+.turno-folga  { background-color: #ffffff; color: #fc0303; border: 1px solid #333; }
+.turno-padrao { background-color: #ecf0f1; color: #333;    border: 1px solid #bdc3c7; }
