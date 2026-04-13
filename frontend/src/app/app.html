@@ -1,11 +1,14 @@
 <div style="font-family: sans-serif;">
   
   <nav style="background: #333; padding: 15px; margin-bottom: 20px;">
-    <a href="/" style="color: white; text-decoration: none; margin-right: 20px; font-weight: bold;">📅 Escala Mensal</a>
-    <a href="/config" style="color: white; text-decoration: none; font-weight: bold;">⚙️ Configuração</a>
+    <a routerLink="/escala" style="color: white; text-decoration: none; margin-right: 20px; font-weight: bold; cursor: pointer;">📅 Escala Mensal</a>
+    
+    <a routerLink="/determinacoes" style="color: white; text-decoration: none; margin-right: 20px; font-weight: bold; cursor: pointer;">📋 Determinações</a>
+    
+    <a routerLink="/painel-usuarios" style="color: white; text-decoration: none; font-weight: bold; cursor: pointer;">👥 Usuários</a>
+
   </nav>
 
   <router-outlet></router-outlet>
 
 </div>
-
