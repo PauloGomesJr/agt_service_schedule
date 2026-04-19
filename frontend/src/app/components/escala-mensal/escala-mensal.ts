@@ -611,6 +611,7 @@ export class EscalaMensalComponent implements OnInit {
     if (!codigo) return ''; 
     switch (codigo.toUpperCase()) {
       case 'A': return 'turno-manha';
+      case 'AB': return 'turno-diario';
       case 'B': return 'turno-tarde';
       case 'C': return 'turno-noite';
       case 'D': return 'turno-manha';
